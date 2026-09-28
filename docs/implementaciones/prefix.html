@@ -10,191 +10,26 @@
 </head>
 <body>
 <main>
+<div class="print-header">GUAPA · Prefix · estructuras_de_datos</div>
 <a class="back" href="../index.html">← Volver al índice</a>
 <h1>Prefix</h1>
 <p class="meta"><span class="tag">estructuras_de_datos</span>
 <span class="tag">Construcción O(n)</span> <span class="tag">Consulta O(1)</span> <span class="tag">Memoria O(n)</span></p>
-<p>Acumulados desde el inicio de un arreglo para responder consultas rápidamente: sumas, máximo, mínimo, conteo y una plantilla general (XOR, etc.). Úsalo cuando hay muchas consultas de rango y pocas o ninguna actualización.</p>
 
-<div class="actions">
-  <button id="imp-sel" type="button">Imprimir selección</button>
-  <button id="imp-todo" type="button">Imprimir todo</button>
-  <button id="sel-todo" type="button">Seleccionar todo</button>
-  <button id="sel-limpiar" type="button">Limpiar selección</button>
-  <button id="copiar-sel" type="button">Copiar código de lo seleccionado</button>
-  <button id="toggle-texto" type="button">Ocultar texto</button>
-  <button id="ver-cpp" type="button">Ver .cpp completo</button>
+<div class="acciones">
+  <button id="btnImpSel" type="button">Imprimir selección</button>
+  <button id="btnImpTodo" type="button">Imprimir todo</button>
+  <button id="btnSelTodo" type="button">Seleccionar todo</button>
+  <button id="btnLimpiar" type="button">Limpiar selección</button>
+  <button id="btnCopiarSel" type="button">Copiar código de lo seleccionado</button>
+  <button id="btnCpp" type="button">Ver .cpp completo</button>
+  <label><input id="chkTexto" type="checkbox" checked> Mostrar texto explicativo</label>
+  <span id="contador"></span>
 </div>
 
-<div class="print-head">GUAPA · Prefix · estructuras_de_datos</div>
-
-<div class="contenido">
-
-<section class="seccion" data-id="s0">
-  <h2>Introducción</h2>
-  <div class="paso" data-id="s0p1">
-    <div class="texto">
-      <p>Los prefix nos sirven para convertir muchas consultas o cálculos sobre arreglos o strings en operaciones rápidas.</p>
-      <p>Se precomputa en <span class="tag">O(n)</span> siempre y cuando no haya actualizaciones de por medio, ya que cada actualización es <code>O(n)</code> en el peor caso. Si se requieren muchas actualizaciones es mejor buscar otras técnicas o estructuras.</p>
-      <p>Un prefix contiene información acumulada desde el inicio de un arreglo y podemos consultarlo en <span class="tag">O(1)</span>. En este caso solo voy a hacer las implementaciones y hablar del prefix. El concepto del suffix es idéntico, solo que partiendo desde el final hacia el inicio.</p>
-      <p>Les colocaré algunas de las implementaciones más útiles del prefix. Muy importante recalcar que la construcción es <span class="tag">O(n)</span> y las consultas <span class="tag">O(1)</span>.</p>
-    </div>
-  </div>
-  <div class="paso agregado" data-id="s0p2">
-    <div class="texto"><p><span class="etiqueta">Agregado</span>Datos de ejemplo (en un problema real se leen de la entrada). Se usan en todos los bloques siguientes.</p></div>
-<pre class="codigo"><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
-using namespace std;
-typedef long long ll;
-
-int main(){
-    vector&lt;int&gt; a = {3, 1, 4, 1, 5, 9, 2, 6};
-    int n = a.size();
-    int i = 5, l = 2, r = 5, x = 1;</code></pre>
-  </div>
-</section>
-
-<section class="seccion" data-id="s1">
-  <h2>Prefix Sum</h2>
-  <div class="paso" data-id="s1p1">
-    <div class="texto"><p>Este prefix es un acumulado de sumas a lo largo del arreglo, nos ayuda a conocer la suma de los elementos en cierto rango.</p></div>
-  </div>
-  <div class="paso agregado" data-id="s1p2">
-    <div class="texto">
-      <p>Establecemos nuestro prefix de tamaño <code>n+1</code> para mayor comodidad en las consultas.</p>
-      <p><span class="etiqueta">Agregado</span>Usamos <code>long long</code> para evitar overflow al sumar muchos <code>int</code>.</p>
-    </div>
-<pre class="codigo"><code class="language-cpp">vector&lt;ll&gt; pref(n+1);</code></pre>
-  </div>
-  <div class="paso" data-id="s1p3">
-    <div class="texto"><p>Inicializamos siempre en un elemento neutro.</p></div>
-<pre class="codigo"><code class="language-cpp">pref[0] = 0;</code></pre>
-  </div>
-  <div class="paso" data-id="s1p4">
-    <div class="texto"><p>Recorremos el arreglo y calculamos la posición siguiente del prefix a partir de la actual.</p></div>
-<pre class="codigo"><code class="language-cpp">for(int k=0;k&lt;n;k++){
-    pref[k+1] = pref[k] + a[k];
-}</code></pre>
-  </div>
-  <div class="paso" data-id="s1p5">
-    <div class="texto"><p>Esto nos da como resultado que cada posición <code>i</code> del arreglo <code>pref</code> tiene el acumulado de todas las posiciones anteriores a <code>i</code>.</p></div>
-  </div>
-  <div class="paso" data-id="s1p6">
-    <div class="texto"><p>Quiero saber cuál es la suma de los elementos anteriores a <code>i</code>.</p></div>
-<pre class="codigo"><code class="language-cpp">ll anteriores = pref[i];
-cout &lt;&lt; "Suma antes de i: " &lt;&lt; anteriores &lt;&lt; "\n";   // 14</code></pre>
-  </div>
-  <div class="paso" data-id="s1p7">
-    <div class="texto">
-      <p>Quiero saber cuál es la suma en el rango <code>[l, r]</code>.</p>
-      <p>Usamos <code>r+1</code> porque <code>pref[r]</code> solo acumula lo anterior a <code>r</code>, sin contar a <code>r</code>. Usamos <code>l</code> porque restamos todo lo anterior a <code>l</code>, o sea lo que está fuera de mi rango.</p>
-    </div>
-<pre class="codigo"><code class="language-cpp">ll rango = pref[r+1] - pref[l];
-cout &lt;&lt; "Suma en [l,r]: " &lt;&lt; rango &lt;&lt; "\n";          // 19</code></pre>
-  </div>
-</section>
-
-<section class="seccion" data-id="s2">
-  <h2>Prefix Minimum y Maximum</h2>
-  <div class="paso" data-id="s2p1">
-    <div class="texto"><p>Estos prefix nos ayudan a saber cuál es el elemento más grande (Maximum) o más pequeño (Minimum) hasta una posición.</p></div>
-  </div>
-  <div class="paso agregado" data-id="s2p2">
-    <div class="texto">
-      <p>Se inicializa igual que el de sumas, pero con el neutro de cada operación.</p>
-      <p><span class="etiqueta">Agregado</span>Corrección: el neutro del máximo es <code>INT_MIN</code> (con <code>0</code> fallaría si hay números negativos).</p>
-    </div>
-<pre class="codigo"><code class="language-cpp">vector&lt;int&gt; prefMaxi(n+1), prefMini(n+1);
-prefMaxi[0] = INT_MIN;
-prefMini[0] = INT_MAX;</code></pre>
-  </div>
-  <div class="paso" data-id="s2p3">
-    <div class="texto"><p>Recorremos el arreglo y guardamos el máximo o el mínimo según lo que nos pidan.</p></div>
-<pre class="codigo"><code class="language-cpp">for(int k=0;k&lt;n;k++){
-    prefMaxi[k+1] = max(prefMaxi[k], a[k]);
-    prefMini[k+1] = min(prefMini[k], a[k]);
-}</code></pre>
-  </div>
-  <div class="paso" data-id="s2p4">
-    <div class="texto"><p>Quiero saber cuál es el elemento más grande que hay antes de la posición <code>i</code>, y cuál es el más pequeño.</p></div>
-<pre class="codigo"><code class="language-cpp">int mayor = prefMaxi[i];
-int menor = prefMini[i];
-cout &lt;&lt; "Mayor antes de i: " &lt;&lt; mayor &lt;&lt; "\n";       // 5
-cout &lt;&lt; "Menor antes de i: " &lt;&lt; menor &lt;&lt; "\n";       // 1</code></pre>
-  </div>
-  <div class="paso agregado" data-id="s2p5">
-    <div class="texto"><p><span class="etiqueta">Agregado</span>Ojo: con <code>min</code>/<code>max</code> NO se pueden restar prefijos para un rango <code>[l, r]</code> (no son operaciones invertibles). Para eso: Sparse Table o Segment Tree.</p></div>
-  </div>
-</section>
-
-<section class="seccion" data-id="s3">
-  <h2>Prefix Count</h2>
-  <div class="paso" data-id="s3p1">
-    <div class="texto"><p>Este prefix nos ayuda a saber cuántas veces aparece un elemento <code>x</code> antes de una posición o en un rango.</p></div>
-  </div>
-  <div class="paso" data-id="s3p2">
-    <div class="texto"><p>Mismo proceso de inicialización.</p></div>
-<pre class="codigo"><code class="language-cpp">vector&lt;int&gt; prefCount(n+1);
-prefCount[0] = 0;</code></pre>
-  </div>
-  <div class="paso" data-id="s3p3">
-    <div class="texto"><p>Recorremos el arreglo y sumamos uno cada vez que encontremos el valor <code>x</code>.</p></div>
-<pre class="codigo"><code class="language-cpp">for(int k=0;k&lt;n;k++){
-    prefCount[k+1] = prefCount[k] + (a[k] == x);
-}</code></pre>
-  </div>
-  <div class="paso" data-id="s3p4">
-    <div class="texto"><p>Quiero saber cuántas veces aparece <code>x</code> antes de <code>i</code>, y cuántas veces aparece en el rango <code>[l, r]</code>.</p></div>
-<pre class="codigo"><code class="language-cpp">int veces = prefCount[i];
-int veces_rango = prefCount[r+1] - prefCount[l];
-cout &lt;&lt; "Veces x antes de i: " &lt;&lt; veces &lt;&lt; "\n";     // 2
-cout &lt;&lt; "Veces x en [l,r]: " &lt;&lt; veces_rango &lt;&lt; "\n"; // 1</code></pre>
-  </div>
-</section>
-
-<section class="seccion" data-id="s4">
-  <h2>Prefix General</h2>
-  <div class="paso" data-id="s4p1">
-    <div class="texto">
-      <p>En resumen, podemos quedarnos con una plantilla y sustituir <code>combinar</code> por la operación que necesitemos. Los usos más comunes son:</p>
-      <ul>
-        <li><code>+</code>: suma</li>
-        <li><code>min</code>: mínimo</li>
-        <li><code>max</code>: máximo</li>
-        <li><code>^</code>: XOR</li>
-      </ul>
-    </div>
-  </div>
-  <div class="paso agregado" data-id="s4p2">
-    <div class="texto"><p><span class="etiqueta">Agregado</span>Ejemplo concreto con XOR (neutro = <code>0</code>).</p></div>
-<pre class="codigo"><code class="language-cpp">auto combinar = [](ll acumulado, int valor){ return acumulado ^ valor; };
-
-vector&lt;ll&gt; pref(n+1);
-pref[0] = 0;   // Casi siempre es el neutro de la operación
-
-for(int k=0;k&lt;n;k++){
-    pref[k+1] = combinar(pref[k], a[k]);
-}</code></pre>
-  </div>
-  <div class="paso agregado" data-id="s4p3">
-    <div class="texto">
-      <p>Consultas: lo que está antes de <code>i</code>, y lo que está entre <code>l</code> y <code>r</code>.</p>
-      <p><span class="etiqueta">Agregado</span>El rango solo funciona si la operación es invertible (suma con resta, XOR con XOR, conteo con resta). Con <code>min</code>/<code>max</code> no aplica.</p>
-    </div>
-<pre class="codigo"><code class="language-cpp">ll antes = pref[i];             // lo que está antes de i
-ll entre = pref[r+1] ^ pref[l]; // lo que está entre l y r
-cout &lt;&lt; "XOR antes de i: " &lt;&lt; antes &lt;&lt; "\n";   // 3^1^4^1^5 = 2
-cout &lt;&lt; "XOR en [l,r]: " &lt;&lt; entre &lt;&lt; "\n";     // 9
-return 0;
-}</code></pre>
-  </div>
-</section>
-
-</div><!-- /contenido -->
-
-<section class="cpp-completo" id="cpp-src">
-  <h2>prefix.cpp</h2>
-  <p><button id="copiar-cpp" type="button">Copiar</button></p>
-<pre class="codigo-completo"><code class="language-cpp">/*
+<div id="cppCompleto" hidden>
+<div class="bar"><span>prefix.cpp</span><button id="copiarCpp" type="button">Copiar</button></div>
+<pre><code class="language-cpp">/*
  * Nombre: Prefix (sumas, máximo, mínimo, conteo y plantilla general)
  * Categoría: estructuras_de_datos
  * Descripción: Acumulados desde el inicio de un arreglo para responder
@@ -322,7 +157,7 @@ int main(){
     }
     // Consultas
     ll antes = pref[i];   // lo que está antes de i
-    // Lo que está entre l y r. [AGREGADO] Solo funciona si la operación es invertible
+    // Lo que está entre l y r.  Solo funciona si la operación es invertible
     // (suma con resta, XOR con XOR, conteo con resta). Con min/max no aplica.
     ll entre = pref[r+1] ^ pref[l];
 
@@ -332,6 +167,165 @@ int main(){
     return 0;
 }
 </code></pre>
+</div>
+
+<section class="seccion" data-id="s0">
+<h2>Introducción</h2>
+<div class="paso" data-id="s0p1">
+  <div class="texto">
+    <p>Los prefix nos sirven para convertir muchas consultas o cálculos sobre arreglos o strings en operaciones rápidas.</p>
+    <p>Se precomputa en <span class="badge">O(n)</span> siempre y cuando no haya actualizaciones de por medio, ya que cada actualización es <code>O(n)</code> en el peor caso. Si se requieren muchas actualizaciones es mejor buscar otras técnicas o estructuras.</p>
+    <p>Un prefix contiene información acumulada desde el inicio de un arreglo y podemos consultarlo en <span class="badge">O(1)</span>. En este caso solo voy a hacer las implementaciones y hablar del prefix. El concepto del suffix es idéntico, solo que partiendo desde el final hacia el inicio.</p>
+    <p>Les colocaré algunas de las implementaciones más útiles del prefix. Muy importante recalcar que la construcción es <span class="badge">O(n)</span> y las consultas <span class="badge">O(1)</span>.</p>
+  </div>
+</div>
+<div class="paso" data-id="s0p2">
+  <div class="texto"><p class="agregado"><span class="etiqueta-agregado">Agregado</span> Datos de ejemplo (en un problema real se leen de la entrada). Se usan en todos los bloques siguientes.</p></div>
+  <pre class="codigo"><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+typedef long long ll;
+
+int main(){
+    vector&lt;int&gt; a = {3, 1, 4, 1, 5, 9, 2, 6};
+    int n = a.size();
+    int i = 5, l = 2, r = 5, x = 1;</code></pre>
+</div>
+</section>
+
+<section class="seccion" data-id="s1">
+<h2>Prefix Sum</h2>
+<div class="paso" data-id="s1p1">
+  <div class="texto"><p>Este prefix es un acumulado de sumas a lo largo del arreglo, nos ayuda a conocer la suma de los elementos en cierto rango.</p></div>
+</div>
+<div class="paso" data-id="s1p2">
+  <div class="texto">
+    <p>Establecemos nuestro prefix de tamaño <code>n+1</code> para mayor comodidad en las consultas.</p>
+    <p class="agregado"><span class="etiqueta-agregado">Agregado</span> Usamos <code>long long</code> para evitar overflow al sumar muchos <code>int</code>.</p>
+  </div>
+  <pre class="codigo"><code class="language-cpp">vector&lt;ll&gt; pref(n+1);</code></pre>
+</div>
+<div class="paso" data-id="s1p3">
+  <div class="texto"><p>Inicializamos siempre en un elemento neutro.</p></div>
+  <pre class="codigo"><code class="language-cpp">pref[0] = 0;</code></pre>
+</div>
+<div class="paso" data-id="s1p4">
+  <div class="texto"><p>Recorremos el arreglo y calculamos la posición siguiente del prefix a partir de la actual.</p></div>
+  <pre class="codigo"><code class="language-cpp">for(int k=0;k&lt;n;k++){
+    pref[k+1] = pref[k] + a[k];
+}</code></pre>
+</div>
+<div class="paso" data-id="s1p5">
+  <div class="texto"><p>Esto nos da como resultado que cada posición <code>i</code> del arreglo <code>pref</code> tiene el acumulado de todas las posiciones anteriores a <code>i</code>.</p></div>
+</div>
+<div class="paso" data-id="s1p6">
+  <div class="texto"><p>Quiero saber cuál es la suma de los elementos anteriores a <code>i</code>.</p></div>
+  <pre class="codigo"><code class="language-cpp">ll anteriores = pref[i];
+cout &lt;&lt; "Suma antes de i: " &lt;&lt; anteriores &lt;&lt; "\n";   // 14</code></pre>
+</div>
+<div class="paso" data-id="s1p7">
+  <div class="texto">
+    <p>Quiero saber cuál es la suma en el rango <code>[l, r]</code>.</p>
+    <p>Usamos <code>r+1</code> porque <code>pref[r]</code> solo acumula lo anterior a <code>r</code>, sin contar a <code>r</code>. Usamos <code>l</code> porque restamos todo lo anterior a <code>l</code>, o sea lo que está fuera de mi rango.</p>
+  </div>
+  <pre class="codigo"><code class="language-cpp">ll rango = pref[r+1] - pref[l];
+cout &lt;&lt; "Suma en [l,r]: " &lt;&lt; rango &lt;&lt; "\n";          // 19</code></pre>
+</div>
+</section>
+
+<section class="seccion" data-id="s2">
+<h2>Prefix Minimum y Maximum</h2>
+<div class="paso" data-id="s2p1">
+  <div class="texto"><p>Estos prefix nos ayudan a saber cuál es el elemento más grande (Maximum) o más pequeño (Minimum) hasta una posición.</p></div>
+</div>
+<div class="paso" data-id="s2p2">
+  <div class="texto">
+    <p>Se inicializa igual que el de sumas, pero con el neutro de cada operación.</p>
+    <p class="agregado"><span class="etiqueta-agregado">Corregido</span> El neutro del máximo es <code>INT_MIN</code> (con <code>0</code> fallaría si hay números negativos).</p>
+  </div>
+  <pre class="codigo"><code class="language-cpp">vector&lt;int&gt; prefMaxi(n+1), prefMini(n+1);
+prefMaxi[0] = INT_MIN;
+prefMini[0] = INT_MAX;</code></pre>
+</div>
+<div class="paso" data-id="s2p3">
+  <div class="texto"><p>Recorremos el arreglo y guardamos el máximo o el mínimo según lo que nos pidan.</p></div>
+  <pre class="codigo"><code class="language-cpp">for(int k=0;k&lt;n;k++){
+    prefMaxi[k+1] = max(prefMaxi[k], a[k]);
+    prefMini[k+1] = min(prefMini[k], a[k]);
+}</code></pre>
+</div>
+<div class="paso" data-id="s2p4">
+  <div class="texto"><p>Quiero saber cuál es el elemento más grande que hay antes de la posición <code>i</code>, y cuál es el más pequeño.</p></div>
+  <pre class="codigo"><code class="language-cpp">int mayor = prefMaxi[i];
+int menor = prefMini[i];
+cout &lt;&lt; "Mayor antes de i: " &lt;&lt; mayor &lt;&lt; "\n";       // 5
+cout &lt;&lt; "Menor antes de i: " &lt;&lt; menor &lt;&lt; "\n";       // 1</code></pre>
+</div>
+<div class="paso" data-id="s2p5">
+  <div class="texto"><p class="agregado"><span class="etiqueta-agregado">Agregado</span> Ojo: con <code>min</code>/<code>max</code> NO se pueden restar prefijos para un rango <code>[l, r]</code> (no son operaciones invertibles). Para eso: Sparse Table o Segment Tree.</p></div>
+</div>
+</section>
+
+<section class="seccion" data-id="s3">
+<h2>Prefix Count</h2>
+<div class="paso" data-id="s3p1">
+  <div class="texto"><p>Este prefix nos ayuda a saber cuántas veces aparece un elemento <code>x</code> antes de una posición o en un rango.</p></div>
+</div>
+<div class="paso" data-id="s3p2">
+  <div class="texto"><p>Mismo proceso de inicialización.</p></div>
+  <pre class="codigo"><code class="language-cpp">vector&lt;int&gt; prefCount(n+1);
+prefCount[0] = 0;</code></pre>
+</div>
+<div class="paso" data-id="s3p3">
+  <div class="texto"><p>Recorremos el arreglo y sumamos uno cada vez que encontremos el valor <code>x</code>.</p></div>
+  <pre class="codigo"><code class="language-cpp">for(int k=0;k&lt;n;k++){
+    prefCount[k+1] = prefCount[k] + (a[k] == x);
+}</code></pre>
+</div>
+<div class="paso" data-id="s3p4">
+  <div class="texto"><p>Quiero saber cuántas veces aparece <code>x</code> antes de <code>i</code>, y cuántas veces aparece en el rango <code>[l, r]</code>.</p></div>
+  <pre class="codigo"><code class="language-cpp">int veces = prefCount[i];
+int veces_rango = prefCount[r+1] - prefCount[l];
+cout &lt;&lt; "Veces x antes de i: " &lt;&lt; veces &lt;&lt; "\n";     // 2
+cout &lt;&lt; "Veces x en [l,r]: " &lt;&lt; veces_rango &lt;&lt; "\n"; // 1</code></pre>
+</div>
+</section>
+
+<section class="seccion" data-id="s4">
+<h2>Prefix General</h2>
+<div class="paso" data-id="s4p1">
+  <div class="texto">
+    <p>En resumen, podemos quedarnos con una plantilla y sustituir <code>combinar</code> por la operación que necesitemos. Los usos más comunes son:</p>
+    <ul>
+      <li><code>+</code>: suma</li>
+      <li><code>min</code>: mínimo</li>
+      <li><code>max</code>: máximo</li>
+      <li><code>^</code>: XOR</li>
+    </ul>
+  </div>
+</div>
+<div class="paso" data-id="s4p2">
+  <div class="texto"><p class="agregado"><span class="etiqueta-agregado">Agregado</span> Ejemplo concreto con XOR (neutro = <code>0</code>).</p></div>
+  <pre class="codigo"><code class="language-cpp">auto combinar = [](ll acumulado, int valor){ return acumulado ^ valor; };
+
+vector&lt;ll&gt; pref(n+1);
+pref[0] = 0;   // Casi siempre es el neutro de la operación
+
+for(int k=0;k&lt;n;k++){
+    pref[k+1] = combinar(pref[k], a[k]);
+}</code></pre>
+</div>
+<div class="paso" data-id="s4p3">
+  <div class="texto">
+    <p>Consultas: lo que está antes de <code>i</code>, y lo que está entre <code>l</code> y <code>r</code>.</p>
+    <p class="agregado"><span class="etiqueta-agregado">Agregado</span> El rango solo funciona si la operación es invertible (suma con resta, XOR con XOR, conteo con resta). Con <code>min</code>/<code>max</code> no aplica.</p>
+  </div>
+  <pre class="codigo"><code class="language-cpp">ll antes = pref[i];             // lo que está antes de i
+ll entre = pref[r+1] ^ pref[l]; // lo que está entre l y r
+cout &lt;&lt; "XOR antes de i: " &lt;&lt; antes &lt;&lt; "\n";   // 3^1^4^1^5 = 2
+cout &lt;&lt; "XOR en [l,r]: " &lt;&lt; entre &lt;&lt; "\n";     // 9
+return 0;
+}</code></pre>
+</div>
 </section>
 
 </main>
