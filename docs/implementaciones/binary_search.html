@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Binary Search · GUAPA</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script defer src="../assets/viewer.js"></script>
+</head>
+<body>
+<main>
+<div class="print-header">GUAPA · Binary Search · busqueda</div>
+<a class="back" href="../index.html">← Volver al índice</a>
+<h1>Binary Search</h1>
+<p class="meta"><span class="tag">busqueda</span>
+<span class="tag">Arreglo O(log n)</span> <span class="tag">Sobre la respuesta O(log(rango) · puede)</span> <span class="tag">Memoria O(1)</span></p>
+
+<div class="acciones">
+  <button id="btnImpSel" type="button">Imprimir selección</button>
+  <button id="btnImpTodo" type="button">Imprimir todo</button>
+  <button id="btnSelTodo" type="button">Seleccionar todo</button>
+  <button id="btnLimpiar" type="button">Limpiar selección</button>
+  <button id="btnCopiarSel" type="button">Copiar código de lo seleccionado</button>
+  <button id="btnCpp" type="button">Ver .cpp completo</button>
+  <label><input id="chkTexto" type="checkbox" checked> Mostrar texto explicativo</label>
+  <span id="contador"></span>
+</div>
+
+<div id="cppCompleto" hidden>
+<div class="bar"><span>binary_search.cpp</span><button id="copiarCpp" type="button">Copiar</button></div>
+<pre><code class="language-cpp">/*
+ * Nombre: Binary Search (búsqueda binaria)
+ * Categoría: busqueda
+ * Descripción: Encontrar una posición o un valor dentro de un espacio ordenado
+ *              descartando la mitad de las posibilidades en cada paso.
+ *              Dos usos: sobre un arreglo y sobre una respuesta.
+ * Complejidad: arreglo O(log n) por búsqueda | sobre la respuesta
+ *              O(log(rango) * costo de puede()) | memoria O(1)
+ * Cuándo usarlo: arreglo ordenado, o cuando una condición cambia una sola vez
+ *                (V...V F...F o F...F V...V) y se quiere minimizar/maximizar.
+ */
+
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+typedef long long ll;
+
+/*BINARY SEARCH
+La idea principal de la búsqueda binaria es encontrar una posición o un valor dentro de un espacio ordenado.
+En lugar de revisar elemento por elemento, descartamos la mitad de las posibilidades en cada paso.
+Al dividir a la mitad en cada iteración nuestra complejidad se vuelve O(log n) por cada búsqueda.
+Existen 2 usos principales de la binaria.
+1.- Sobre un arreglo
+2.- Sobre una respuesta
+*/
+
+/*Binary sobre un arreglo
+Sea a un arreglo de enteros ordenado.
+*/
+
+/*Buscar si existe un valor exacto*/
+int binarySearch(vector&lt;int&gt;&amp; a,int x){
+    // Establecemos los límites de la binaria desde 0 hasta n-1 que es el último índice de nuestro arreglo.
+    int l=0,r=(int)a.size()-1;
+    while(l&lt;=r){
+        // m va a ser quien divida a la mitad y nos ayude a descartar lo que no sirva.
+        // [AGREGADO] Usamos l+(r-l)/2 en lugar de (l+r)/2 para evitar overflow con índices grandes.
+        int m=l+(r-l)/2;
+        // Encontramos el valor y regresamos la posición.
+        if(a[m]==x)return m;
+        // Si a[m] &lt; x descartamos la mitad de la izquierda ya que sabemos que x debe estar al menos una posición después de esa m.
+        // Si no descartamos la de la derecha porque sabemos que x debe estar al menos una posición antes que m.
+        if(a[m]&lt;x)
+            l=m+1;
+        else
+            r=m-1;
+    }
+    // Si terminamos la búsqueda y no lo encontramos regresamos -1 para indicar que no existe en el arreglo.
+    return -1;
+}
+
+/*Encontrar la primera posición &gt;=x o &gt;x
+El lower bound y upper bound son funciones que utilizan una búsqueda binaria.
+Podemos obtenerlas con:
+int posLower = lower_bound(a.begin(),a.end(),x)-a.begin();
+int posUpper = upper_bound(a.begin(),a.end(),x)-a.begin();
+o programar la binaria: tomamos como base lowerBound, pero podemos cambiar el &gt;= por &gt; para obtener upperBound.
+*/
+int lowerBound(vector&lt;int&gt;&amp; a,int x){
+    // Establecemos los límites de la binaria desde 0 hasta n, ya que si está en el final significa que no hay dentro del arreglo un elemento &gt;=x.
+    int l=0,r=a.size();
+    while(l&lt;r){   // [CORREGIDO] antes era l&lt;=r: con r=m se cicla y lee fuera del arreglo
+        // m va a ser quien divida a la mitad y nos ayude a descartar lo que no sirva.
+        int m=l+(r-l)/2;
+        // Si a[m]&gt;=x reducimos r, porque ya nos aseguramos de que a[m] es al menos mayor o igual a x.
+        // Si es menor avanzamos 1 porque x debe estar al menos una posición después.
+        if(a[m]&gt;=x)// Solo cambiamos &gt;= por &gt; para el upper, lo demás es idéntico
+            r=m;
+        else
+            l=m+1;
+    }
+    // Regresamos la posición en donde se cumplió.
+    return l;
+}
+
+int main(){
+    // [AGREGADO] Ejemplo de uso
+    vector&lt;int&gt; a = {1, 3, 3, 5, 7, 9, 11};
+    cout &lt;&lt; binarySearch(a, 7) &lt;&lt; "\n";                              // 4
+    cout &lt;&lt; binarySearch(a, 4) &lt;&lt; "\n";                              // -1
+    cout &lt;&lt; lowerBound(a, 3) &lt;&lt; "\n";                                // 1
+    cout &lt;&lt; lowerBound(a, 4) &lt;&lt; "\n";                                // 3
+    cout &lt;&lt; lowerBound(a, 12) &lt;&lt; "\n";                               // 7 (no hay elemento &gt;= 12)
+    cout &lt;&lt; upper_bound(a.begin(), a.end(), 3) - a.begin() &lt;&lt; "\n";  // 3
+
+    /*Binary sobre una respuesta
+    Es muy importante que podamos hacer una función de la forma:
+    -V=verdadero
+    -F=falso
+    V V V V V F F F F F
+    o también:
+    F F F F F V V V V V
+    Donde al inicio sea siempre verdadero y después siempre falso o primero siempre falso y después siempre verdadero.
+    Con la binaria podemos buscar 2 cosas, el último valor antes del cambio o el primero después del cambio.
+    Esto nos puede ayudar a maximizar o minimizar las soluciones.
+    */
+
+    {
+    /*Minimizar
+    Dada una función de la forma
+    F F F F V V V V
+    imprime el mínimo x que cumple con algo (el primer verdadero de la función).
+    */
+    // [AGREGADO] Ejemplo: el menor m tal que m*m &gt;= 50 (respuesta: 8).
+    auto puede = [](ll m){ return m*m &gt;= 50; };
+    ll minimo=0, maximo=100;
+    // Establecemos los límites de la binaria, generalmente va de 0 a un valor muy grande como 1e18
+    // que pasa muy bien en límites de 1 segundo, pero si de antemano se conoce entre qué valores puede estar la solución así se establecen el mínimo y el máximo.
+    // [AGREGADO] Con límites de hasta 1e18 usa long long (ll); int no alcanza.
+    ll l=minimo, r=maximo;
+    while(l&lt;r){
+        // m es igual al piso de la división
+        ll m = l + (r-l)/2;
+        // La función puede se ajusta al problema, nos devuelve un bool si es verdadero o falso para la m actual
+        if(puede(m)){
+            // Reducimos la r y sabemos que puede ser esa la solución o estar antes.
+            r=m;
+        }
+        // Si es falso, avanzamos 1 ya que sabemos que ese es falso y necesitamos el primer verdadero por lo que al menos está uno después.
+        else l=m+1;
+    }
+    // [AGREGADO] Ojo: si ningún valor cumple, l termina valiendo maximo. Verifica puede(l) al final si eso puede pasar.
+    // Por último imprimimos la l que nos da el primer valor que cumple con algo.
+    cout&lt;&lt;l&lt;&lt;endl;   // 8
+    }
+
+    {
+    /*Maximizar
+    Dada una función de la forma
+    V V V V V F F F F F
+    imprime el máximo x que cumple con algo (el último verdadero de la función).
+    */
+    // [AGREGADO] Ejemplo: el mayor m tal que m*m &lt;= 50 (respuesta: 7).
+    auto puede = [](ll m){ return m*m &lt;= 50; };
+    ll minimo=0, maximo=100;
+    // Establecemos los límites de la binaria, generalmente va de 0 a un valor muy grande como 1e18.
+    // Si de antemano se conoce entre qué valores puede estar la solución así se establecen el mínimo y el máximo.
+    ll l=minimo, r=maximo;
+    while(l&lt;r){
+        // m es igual al techo de la división
+        ll m = l + (r-l+1)/2;
+        // La función puede se ajusta al problema, nos devuelve un bool si es verdadero o falso para la m actual
+        if(puede(m)){
+            // Aumentamos la l y sabemos que puede ser esa la solución o estar después.
+            l=m;   // [CORREGIDO] antes era r=m
+        }
+        // Si es falso sabemos que por lo menos tiene que estar una antes por lo que reducimos r y restamos 1.
+        else r=m-1;   // [CORREGIDO] antes era l=m+1 (y faltaba el ;)
+    }
+    // [AGREGADO] Ojo: si ningún valor cumple, l termina valiendo minimo. Verifica puede(l) al final si eso puede pasar.
+    // Por último imprimimos la l que nos da el último valor que cumple con algo.
+    cout&lt;&lt;l&lt;&lt;endl;   // 7
+    }
+
+    /*La diferencia entre minimizar y maximizar es la división piso o techo para evitar un loop infinito en el while.
+    [AGREGADO] Al minimizar hacemos r=m: con piso m&lt;r siempre, así el rango se achica. Al maximizar hacemos l=m: con techo m&gt;l siempre.
+    */
+    return 0;
+}
+</code></pre>
+</div>
+
+<section class="seccion" data-id="s1">
+<h2>Introducción</h2>
+<div class="paso" data-id="s1p1">
+  <div class="texto">
+    <p>La idea principal de la búsqueda binaria es encontrar una posición o un valor dentro de un espacio ordenado. En lugar de revisar elemento por elemento, descartamos la mitad de las posibilidades en cada paso. Al dividir a la mitad en cada iteración nuestra complejidad se vuelve <span class="badge">O(log n)</span> por cada búsqueda.</p>
+    <p>Existen 2 usos principales de la binaria:</p>
+    <ol><li>Sobre un arreglo</li><li>Sobre una respuesta</li></ol>
+  </div>
+</div>
+</section>
+
+<section class="seccion" data-id="s2">
+<h2>Binary sobre un arreglo</h2>
+<div class="paso" data-id="s2p1">
+  <div class="texto"><p>Sea <code>a</code> un arreglo de enteros ordenado.</p></div>
+</div>
+</section>
+
+<section class="seccion" data-id="s3">
+<h2>Buscar si existe un valor exacto</h2>
+<div class="paso" data-id="s3p1">
+  <div class="texto"><p>Establecemos los límites de la binaria desde <code>0</code> hasta <code>n-1</code> que es el último índice de nuestro arreglo.</p></div>
+  <pre class="codigo"><code class="language-cpp">int binarySearch(vector&lt;int&gt;&amp; a,int x){
+    int l=0,r=(int)a.size()-1;
+    while(l&lt;=r){</code></pre>
+</div>
+<div class="paso" data-id="s3p2">
+  <div class="texto">
+    <p><code>m</code> va a ser quien divida a la mitad y nos ayude a descartar lo que no sirva.</p>
+    <p class="agregado"><span class="etiqueta-agregado">Agregado</span> Usamos <code>l+(r-l)/2</code> en lugar de <code>(l+r)/2</code> para evitar overflow con índices grandes.</p>
+  </div>
+  <pre class="codigo"><code class="language-cpp">        int m=l+(r-l)/2;</code></pre>
+</div>
+<div class="paso" data-id="s3p3">
+  <div class="texto"><p>Encontramos el valor y regresamos la posición.</p></div>
+  <pre class="codigo"><code class="language-cpp">        if(a[m]==x)return m;</code></pre>
+</div>
+<div class="paso" data-id="s3p4">
+  <div class="texto"><p>Si <code>a[m] &lt; x</code> descartamos la mitad de la izquierda ya que sabemos que <code>x</code> debe estar al menos una posición después de esa <code>m</code>. Si no, descartamos la de la derecha porque sabemos que <code>x</code> debe estar al menos una posición antes que <code>m</code>.</p></div>
+  <pre class="codigo"><code class="language-cpp">        if(a[m]&lt;x)
+            l=m+1;
+        else
+            r=m-1;
+    }</code></pre>
+</div>
+<div class="paso" data-id="s3p5">
+  <div class="texto"><p>Si terminamos la búsqueda y no lo encontramos regresamos <code>-1</code> para indicar que no existe en el arreglo.</p></div>
+  <pre class="codigo"><code class="language-cpp">    return -1;
+}</code></pre>
+</div>
+</section>
+
+<section class="seccion" data-id="s4">
+<h2>Encontrar la primera posición &gt;=x o &gt;x</h2>
+<div class="paso" data-id="s4p1">
+  <div class="texto">
+    <p>El lower bound y upper bound son funciones que utilizan una búsqueda binaria. Podemos obtenerlas con:</p>
+    <ul>
+      <li><code>int posLower = lower_bound(a.begin(),a.end(),x)-a.begin();</code></li>
+      <li><code>int posUpper = upper_bound(a.begin(),a.end(),x)-a.begin();</code></li>
+    </ul>
+    <p>o programar la binaria: tomamos como base <code>lowerBound</code>, pero podemos cambiar el <code>&gt;=</code> por <code>&gt;</code> para obtener <code>upperBound</code>.</p>
+  </div>
+</div>
+<div class="paso" data-id="s4p2">
+  <div class="texto"><p>Establecemos los límites de la binaria desde <code>0</code> hasta <code>n</code>, ya que si está en el final significa que no hay dentro del arreglo un elemento <code>&gt;=x</code>.</p></div>
+  <pre class="codigo"><code class="language-cpp">int lowerBound(vector&lt;int&gt;&amp; a,int x){
+    int l=0,r=a.size();
+    while(l&lt;r){   // [CORREGIDO] antes era l&lt;=r: con r=m se cicla y lee fuera del arreglo</code></pre>
+</div>
+<div class="paso" data-id="s4p3">
+  <div class="texto"><p><code>m</code> va a ser quien divida a la mitad y nos ayude a descartar lo que no sirva.</p></div>
+  <pre class="codigo"><code class="language-cpp">        int m=l+(r-l)/2;</code></pre>
+</div>
+<div class="paso" data-id="s4p4">
+  <div class="texto"><p>Si <code>a[m]&gt;=x</code> reducimos <code>r</code>, porque ya nos aseguramos de que <code>a[m]</code> es al menos mayor o igual a <code>x</code>. Si es menor avanzamos 1 porque <code>x</code> debe estar al menos una posición después.</p></div>
+  <pre class="codigo"><code class="language-cpp">        if(a[m]&gt;=x)// Solo cambiamos &gt;= por &gt; para el upper, lo demás es idéntico
+            r=m;
+        else
+            l=m+1;
+    }</code></pre>
+</div>
+<div class="paso" data-id="s4p5">
+  <div class="texto"><p>Regresamos la posición en donde se cumplió.</p></div>
+  <pre class="codigo"><code class="language-cpp">    return l;
+}</code></pre>
+</div>
+<div class="paso" data-id="s4p6">
+  <div class="texto"><p class="agregado"><span class="etiqueta-agregado">Agregado</span> Ejemplo de uso (en el <code>.cpp</code> completo va dentro de <code>main</code>).</p></div>
+  <pre class="codigo"><code class="language-cpp">vector&lt;int&gt; a = {1, 3, 3, 5, 7, 9, 11};
+cout &lt;&lt; binarySearch(a, 7) &lt;&lt; "\n";                              // 4
+cout &lt;&lt; binarySearch(a, 4) &lt;&lt; "\n";                              // -1
+cout &lt;&lt; lowerBound(a, 3) &lt;&lt; "\n";                                // 1
+cout &lt;&lt; lowerBound(a, 4) &lt;&lt; "\n";                                // 3
+cout &lt;&lt; lowerBound(a, 12) &lt;&lt; "\n";                               // 7 (no hay elemento &gt;= 12)
+cout &lt;&lt; upper_bound(a.begin(), a.end(), 3) - a.begin() &lt;&lt; "\n";  // 3</code></pre>
+</div>
+</section>
+
+<section class="seccion" data-id="s5">
+<h2>Binary sobre una respuesta</h2>
+<div class="paso" data-id="s5p1">
+  <div class="texto">
+    <p>Es muy importante que podamos hacer una función de la forma:</p>
+    <ul><li><code>V</code> = verdadero</li><li><code>F</code> = falso</li></ul>
+    <p><code>V V V V V F F F F F</code></p>
+    <p>o también:</p>
+    <p><code>F F F F F V V V V V</code></p>
+    <p>Donde al inicio sea siempre verdadero y después siempre falso, o primero siempre falso y después siempre verdadero. Con la binaria podemos buscar 2 cosas, el último valor antes del cambio o el primero después del cambio. Esto nos puede ayudar a maximizar o minimizar las soluciones.</p>
+  </div>
+</div>
+</section>
+
+<section class="seccion" data-id="s6">
+<h2>Minimizar</h2>
+<div class="paso" data-id="s6p1">
+  <div class="texto">
+    <p>Dada una función de la forma <code>F F F F V V V V</code>, imprime el mínimo <code>x</code> que cumple con algo (el primer verdadero de la función).</p>
+    <p class="agregado"><span class="etiqueta-agregado">Agregado</span> Ejemplo: el menor <code>m</code> tal que <code>m*m &gt;= 50</code> (respuesta: 8).</p>
+  </div>
+  <pre class="codigo"><code class="language-cpp">auto puede = [](ll m){ return m*m &gt;= 50; };
+ll minimo=0, maximo=100;</code></pre>
+</div>
+<div class="paso" data-id="s6p2">
+  <div class="texto">
+    <p>Establecemos los límites de la binaria, generalmente va de 0 a un valor muy grande como <code>1e18</code> que pasa muy bien en límites de 1 segundo, pero si de antemano se conoce entre qué valores puede estar la solución así se establecen el mínimo y el máximo.</p>
+    <p class="agregado"><span class="etiqueta-agregado">Agregado</span> Con límites de hasta <code>1e18</code> usa <code>long long</code> (<code>ll</code>); <code>int</code> no alcanza.</p>
+  </div>
+  <pre class="codigo"><code class="language-cpp">ll l=minimo, r=maximo;
+while(l&lt;r){</code></pre>
+</div>
+<div class="paso" data-id="s6p3">
+  <div class="texto"><p><code>m</code> es igual al piso de la división.</p></div>
+  <pre class="codigo"><code class="language-cpp">    ll m = l + (r-l)/2;</code></pre>
+</div>
+<div class="paso" data-id="s6p4">
+  <div class="texto"><p>La función <code>puede</code> se ajusta al problema, nos devuelve un <code>bool</code> si es verdadero o falso para la <code>m</code> actual.</p></div>
+  <pre class="codigo"><code class="language-cpp">    if(puede(m)){</code></pre>
+</div>
+<div class="paso" data-id="s6p5">
+  <div class="texto"><p>Reducimos la <code>r</code> y sabemos que puede ser esa la solución o estar antes.</p></div>
+  <pre class="codigo"><code class="language-cpp">        r=m;
+    }</code></pre>
+</div>
+<div class="paso" data-id="s6p6">
+  <div class="texto"><p>Si es falso, avanzamos 1 ya que sabemos que ese es falso y necesitamos el primer verdadero por lo que al menos está uno después.</p></div>
+  <pre class="codigo"><code class="language-cpp">    else l=m+1;
+}</code></pre>
+</div>
+<div class="paso" data-id="s6p7">
+  <div class="texto">
+    <p class="agregado"><span class="etiqueta-agregado">Agregado</span> Ojo: si ningún valor cumple, <code>l</code> termina valiendo <code>maximo</code>. Verifica <code>puede(l)</code> al final si eso puede pasar.</p>
+    <p>Por último imprimimos la <code>l</code> que nos da el primer valor que cumple con algo.</p>
+  </div>
+  <pre class="codigo"><code class="language-cpp">cout&lt;&lt;l&lt;&lt;endl;   // 8</code></pre>
+</div>
+</section>
+
+<section class="seccion" data-id="s7">
+<h2>Maximizar</h2>
+<div class="paso" data-id="s7p1">
+  <div class="texto">
+    <p>Dada una función de la forma <code>V V V V V F F F F F</code>, imprime el máximo <code>x</code> que cumple con algo (el último verdadero de la función).</p>
+    <p class="agregado"><span class="etiqueta-agregado">Agregado</span> Ejemplo: el mayor <code>m</code> tal que <code>m*m &lt;= 50</code> (respuesta: 7).</p>
+  </div>
+  <pre class="codigo"><code class="language-cpp">auto puede = [](ll m){ return m*m &lt;= 50; };
+ll minimo=0, maximo=100;</code></pre>
+</div>
+<div class="paso" data-id="s7p2">
+  <div class="texto"><p>Establecemos los límites de la binaria, generalmente va de 0 a un valor muy grande como <code>1e18</code>. Si de antemano se conoce entre qué valores puede estar la solución así se establecen el mínimo y el máximo.</p></div>
+  <pre class="codigo"><code class="language-cpp">ll l=minimo, r=maximo;
+while(l&lt;r){</code></pre>
+</div>
+<div class="paso" data-id="s7p3">
+  <div class="texto"><p><code>m</code> es igual al techo de la división.</p></div>
+  <pre class="codigo"><code class="language-cpp">    ll m = l + (r-l+1)/2;</code></pre>
+</div>
+<div class="paso" data-id="s7p4">
+  <div class="texto"><p>La función <code>puede</code> se ajusta al problema, nos devuelve un <code>bool</code> si es verdadero o falso para la <code>m</code> actual.</p></div>
+  <pre class="codigo"><code class="language-cpp">    if(puede(m)){</code></pre>
+</div>
+<div class="paso" data-id="s7p5">
+  <div class="texto"><p>Aumentamos la <code>l</code> y sabemos que puede ser esa la solución o estar después.</p></div>
+  <pre class="codigo"><code class="language-cpp">        l=m;   // [CORREGIDO] antes era r=m
+    }</code></pre>
+</div>
+<div class="paso" data-id="s7p6">
+  <div class="texto"><p>Si es falso sabemos que por lo menos tiene que estar una antes por lo que reducimos <code>r</code> y restamos 1.</p></div>
+  <pre class="codigo"><code class="language-cpp">    else r=m-1;   // [CORREGIDO] antes era l=m+1 (y faltaba el ;)
+}</code></pre>
+</div>
+<div class="paso" data-id="s7p7">
+  <div class="texto">
+    <p class="agregado"><span class="etiqueta-agregado">Agregado</span> Ojo: si ningún valor cumple, <code>l</code> termina valiendo <code>minimo</code>. Verifica <code>puede(l)</code> al final si eso puede pasar.</p>
+    <p>Por último imprimimos la <code>l</code> que nos da el último valor que cumple con algo.</p>
+  </div>
+  <pre class="codigo"><code class="language-cpp">cout&lt;&lt;l&lt;&lt;endl;   // 7</code></pre>
+</div>
+</section>
+
+<section class="seccion" data-id="s8">
+<h2>Piso o techo</h2>
+<div class="paso" data-id="s8p1">
+  <div class="texto">
+    <p>La diferencia entre minimizar y maximizar es la división piso o techo para evitar un loop infinito en el <code>while</code>.</p>
+    <p class="agregado"><span class="etiqueta-agregado">Agregado</span> Al minimizar hacemos <code>r=m</code>: con piso <code>m&lt;r</code> siempre, así el rango se achica. Al maximizar hacemos <code>l=m</code>: con techo <code>m&gt;l</code> siempre.</p>
+  </div>
+</div>
+</section>
+
+</main>
+</body>
+</html>
