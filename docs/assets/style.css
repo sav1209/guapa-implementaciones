@@ -1,0 +1,25 @@
+:root{--bg:#fff;--fg:#1f2328;--mut:#656d76;--card:#f6f8fa;--bd:#d0d7de;--ac:#0969da;--kw:#cf222e;--cm:#6e7781;--st:#0a3069;--nu:#0550ae;--ti:#8250df}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6edf3;--mut:#8b949e;--card:#161b22;--bd:#30363d;--ac:#58a6ff;--kw:#ff7b72;--cm:#8b949e;--st:#a5d6ff;--nu:#79c0ff;--ti:#d2a8ff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:900px;margin:0 auto;padding:1rem}
+a{color:var(--ac);text-decoration:none}
+.back{display:inline-block;margin-bottom:.5rem}
+.tag{display:inline-block;background:var(--card);border:1px solid var(--bd);border-radius:1rem;padding:0 .6rem;font-size:.8rem;color:var(--mut);margin:.1rem}
+.bar{display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--bd);border-bottom:0;border-radius:8px 8px 0 0;padding:.4rem .8rem;font:.85rem ui-monospace,monospace;color:var(--mut)}
+button{background:var(--bg);color:var(--fg);border:1px solid var(--bd);border-radius:6px;padding:.25rem .7rem;cursor:pointer}
+pre{margin:0;overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:0 0 8px 8px;padding:1rem}
+code{font:.85rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.hljs-keyword,.hljs-type{color:var(--kw)}
+.hljs-comment{color:var(--cm);font-style:italic}
+.hljs-string,.hljs-meta{color:var(--st)}
+.hljs-number,.hljs-literal{color:var(--nu)}
+.hljs-title,.hljs-built_in{color:var(--ti)}
+.controls{display:flex;gap:.5rem;flex-wrap:wrap;margin:1rem 0}
+.controls input,.controls select{padding:.5rem;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--fg);font:inherit}
+.controls input{flex:1;min-width:200px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.card{display:block;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:1rem;color:var(--fg)}
+.card:hover{border-color:var(--ac)}
+.card h3{margin:.3rem 0}
+.card p{margin:.3rem 0;color:var(--mut);font-size:.9rem}
