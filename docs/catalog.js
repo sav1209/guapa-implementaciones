@@ -1,3 +1,4 @@
 const CATALOG = [
   { tipo: "implementacion", categoria: "busqueda", titulo: "Binary Search", descripcion: "Búsqueda binaria sobre un arreglo (valor exacto, lower y upper bound) y sobre la respuesta (minimizar y maximizar).", archivo: "implementaciones/binary_search.html", cpp: "implementaciones/busqueda/binary_search.cpp", tags: ["binary search", "búsqueda binaria", "lower_bound", "upper_bound", "minimizar", "maximizar", "O(log n)"] }
+,  { tipo: "implementacion", categoria: "estructuras_de_datos", titulo: "Prefix Sums", descripcion: "Acumulados desde el inicio de un arreglo para responder consultas en O(1): suma, mínimo, máximo, conteo y una plantilla general (suma, min, max, XOR).", archivo: "implementaciones/prefix_sums.html", cpp: "implementaciones/estructuras_de_datos/prefix_sums.cpp", tags: ["prefix sum", "sumas prefijas", "acumulados", "rango", "xor", "prefix min", "prefix max", "prefix count", "suffix", "O(1)"] }
 ];
