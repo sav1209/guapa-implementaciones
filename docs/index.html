@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GUAPA · Algoritmia y Programación Avanzada</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-pagina="inicio">
+
+<header class="topbar">
+  <a class="marca" href="#">GUAPA</a>
+  <nav class="tabs">
+    <a class="impl" href="#implementaciones">Implementaciones</a>
+    <a class="ups" href="#upsolving">Upsolving</a>
+  </nav>
+  <input id="buscador" class="buscador" type="search" placeholder="Buscar por título, descripción o tag" aria-label="Buscar">
+</header>
+
+<main class="wide">
+  <div class="hero">
+    <h1>Grupo Universitario de Algoritmia y Programación Avanzada</h1>
+    <p>Material didáctico en C++ para consultar desde el navegador: copia el código, selecciona solo lo que necesitas o imprímelo.</p>
+  </div>
+
+  <section id="implementaciones" class="bloque-seccion impl">
+    <div class="cab-seccion">
+      <div>
+        <h2>Implementaciones</h2>
+        <p>Algoritmos y estructuras listos para consultar</p>
+      </div>
+      <select id="filtro-cat" aria-label="Filtrar por categoría"></select>
+    </div>
+    <div id="lista-impl"></div>
+  </section>
+
+  <section id="upsolving" class="bloque-seccion ups">
+    <div class="cab-seccion">
+      <div>
+        <h2>Upsolving</h2>
+        <p>Soluciones comentadas de nuestros contests semanales</p>
+      </div>
+      <select id="filtro-contest" aria-label="Filtrar por contest"></select>
+    </div>
+    <div id="lista-ups"></div>
+  </section>
+</main>
+
+<script src="catalog.js"></script>
+<script>
+(function () {
+  'use strict';
+  var IMPL = CATALOG.filter(function (e) { return e.tipo === 'implementacion'; });
+  var UPS  = CATALOG.filter(function (e) { return e.tipo === 'solucion'; });
+
+  var CAT_NOMBRES = {
+    busqueda: 'Búsqueda', grafos: 'Grafos', combinatoria: 'Combinatoria', strings: 'Strings',
+    estructuras_de_datos: 'Estructuras de datos', programacion_dinamica: 'Programación dinámica',
+    matematicas: 'Matemáticas', geometria: 'Geometría'
+  };
+  function nombreCat(c) {
+    return CAT_NOMBRES[c] || (c.charAt(0).toUpperCase() + c.slice(1).replace(/_/g, ' '));
+  }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function norm(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  function coincide(e, q) {
+    if (!q) return true;
+    var texto = norm([e.titulo, e.descripcion, e.problema || '', (e.tags || []).join(' ')].join(' '));
+    return q.split(/\s+/).every(function (w) { return texto.indexOf(w) >= 0; });
+  }
+  function tagsHtml(e) {
+    return '<div class="tags">' + (e.tags || []).slice(0, 5).map(function (t) {
+      return '<span class="tag">' + esc(t) + '</span>';
+    }).join('') + '</div>';
+  }
+
+  var selCat = document.getElementById('filtro-cat');
+  var selContest = document.getElementById('filtro-contest');
+  var buscador = document.getElementById('buscador');
+
+  // Opciones de los filtros
+  var cats = Array.from(new Set(IMPL.map(function (e) { return e.categoria; }))).sort();
+  selCat.innerHTML = '<option value="">Todas las categorías</option>' +
+    cats.map(function (c) { return '<option value="' + esc(c) + '">' + esc(nombreCat(c)) + '</option>'; }).join('');
+  var contests = Array.from(new Set(UPS.map(function (e) { return e.contest; }))).sort(function (a, b) { return b - a; });
+  selContest.innerHTML = '<option value="">Todos los contests</option>' +
+    contests.map(function (c) { return '<option value="' + c + '">Contest ' + pad(c) + '</option>'; }).join('');
+
+  function renderImpl(q) {
+    var cat = selCat.value;
+    var items = IMPL.filter(function (e) { return (!cat || e.categoria === cat) && coincide(e, q); });
+    var grupos = {};
+    items.forEach(function (e) { (grupos[e.categoria] = grupos[e.categoria] || []).push(e); });
+    var html = Object.keys(grupos).sort().map(function (c) {
+      return '<div class="grupo" id="cat-' + esc(c) + '"><h3>' + esc(nombreCat(c)) +
+        ' <span class="conteo">' + grupos[c].length + '</span></h3><div class="tarjetas">' +
+        grupos[c].map(function (e) {
+          return '<a class="tarjeta" href="' + esc(e.archivo) + '"><h4>' + esc(e.titulo) + '</h4><p>' +
+            esc(e.descripcion) + '</p>' + tagsHtml(e) + '</a>';
+        }).join('') + '</div></div>';
+    }).join('');
+    var vacio = IMPL.length ? 'Sin resultados' : 'Aún no hay implementaciones publicadas';
+    document.getElementById('lista-impl').innerHTML = html || '<p class="vacio">' + vacio + '</p>';
+  }
+
+  function renderUps(q) {
+    var ct = selContest.value;
+    var items = UPS.filter(function (e) { return (!ct || String(e.contest) === ct) && coincide(e, q); });
+    var grupos = {};
+    items.forEach(function (e) { (grupos[e.contest] = grupos[e.contest] || []).push(e); });
+    var html = Object.keys(grupos).map(Number).sort(function (a, b) { return b - a; }).map(function (c) {
+      var lista = grupos[c].slice().sort(function (a, b) { return String(a.problema).localeCompare(String(b.problema)); });
+      return '<div class="grupo" id="contest-' + pad(c) + '"><h3><a href="soluciones/contest_' + pad(c) +
+        '/index.html">Contest ' + pad(c) + '</a> <span class="conteo">' + lista.length + '</span></h3>' +
+        lista.map(function (e) {
+          return '<a class="fila" href="' + esc(e.archivo) + '"><span class="letra">' + esc(e.problema) +
+            '</span><span class="tit">' + esc(e.titulo) + '</span>' +
+            (e.dificultad ? '<span class="dif">' + esc(e.dificultad) + '</span>' : '') +
+            tagsHtml(e) + '</a>';
+        }).join('') + '</div>';
+    }).join('');
+    var vacio = UPS.length ? 'Sin resultados' : 'Aún no hay contests publicados';
+    document.getElementById('lista-ups').innerHTML = html || '<p class="vacio">' + vacio + '</p>';
+  }
+
+  function render() {
+    var q = norm(buscador.value.trim());
+    renderImpl(q);
+    renderUps(q);
+  }
+
+  buscador.addEventListener('input', render);
+  selCat.addEventListener('change', render);
+  selContest.addEventListener('change', render);
+  render();
+
+  // Si se llega con un ancla de categoría o contest, desplazar tras renderizar
+  if (location.hash) {
+    var destino = document.getElementById(location.hash.slice(1));
+    if (destino) destino.scrollIntoView();
+  }
+})();
+</script>
+</body>
+</html>
