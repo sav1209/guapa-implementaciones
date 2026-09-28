@@ -37,7 +37,7 @@ int main(){
     de los elementos en cierto rango.
     */
     // Establecemos nuestro prefix de tamaño n+1 para mayor comodidad en las consultas.
-    // [AGREGADO] Usamos long long para evitar overflow al sumar muchos int.
+    //  Usamos long long para evitar overflow al sumar muchos int.
     vector<ll> pref(n+1);
     // Inicializamos siempre en un elemento neutro.
     pref[0] = 0;
@@ -79,7 +79,7 @@ int main(){
     // Quiero saber cuál es el elemento más pequeño antes de la posición i
     int menor = prefMini[i];
 
-    // [AGREGADO] Ojo: con min/max NO se puede restar prefijos para un rango [l, r]
+    //  Ojo: con min/max NO se puede restar prefijos para un rango [l, r]
     // (no son operaciones invertibles). Para eso: Sparse Table o Segment Tree.
 
     cout << "Mayor antes de i: " << mayor << "\n";       // 5
@@ -115,7 +115,7 @@ int main(){
       max  máximo
       ^    XOR
     */
-    // [AGREGADO] Ejemplo concreto con XOR (neutro = 0).
+    //  Ejemplo concreto con XOR (neutro = 0).
     auto combinar = [](ll acumulado, int valor){ return acumulado ^ valor; };
 
     vector<ll> pref(n+1);
@@ -126,7 +126,7 @@ int main(){
     }
     // Consultas
     ll antes = pref[i];   // lo que está antes de i
-    // Lo que está entre l y r. [AGREGADO] Solo funciona si la operación es invertible
+    // Lo que está entre l y r.  Solo funciona si la operación es invertible
     // (suma con resta, XOR con XOR, conteo con resta). Con min/max no aplica.
     ll entre = pref[r+1] ^ pref[l];
 
