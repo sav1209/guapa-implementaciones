@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GUAPA · Implementaciones y soluciones</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<main>
+<h1>GUAPA</h1>
+<p>Grupo Universitario de Algoritmia y Programación Avanzada: implementaciones básicas y soluciones de contests.</p>
+<div class="controls">
+  <input id="q" type="search" placeholder="Buscar (ej. prefix, grafos, xor)…">
+  <select id="f"><option value="">Todas las categorías</option></select>
+</div>
+<div id="g" class="grid"></div>
+</main>
+<script src="catalog.js"></script>
+<script>
+var q = document.getElementById("q"), f = document.getElementById("f"), g = document.getElementById("g");
+function norm(s){ return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+Array.from(new Set(CATALOG.map(function(e){ return e.categoria; }))).sort()
+  .forEach(function(c){ f.add(new Option(c, c)); });
+function el(tag, cls, txt){ var e = document.createElement(tag); if (cls) e.className = cls; if (txt) e.textContent = txt; return e; }
+function render(){
+  var t = norm(q.value);
+  g.innerHTML = "";
+  CATALOG.filter(function(e){
+    return (!f.value || e.categoria === f.value) &&
+      norm([e.titulo, e.descripcion, e.categoria].concat(e.tags || []).join(" ")).indexOf(t) !== -1;
+  }).forEach(function(e){
+    var a = el("a", "card"); a.href = e.archivo;
+    a.appendChild(el("span", "tag", e.categoria));
+    a.appendChild(el("h3", "", e.titulo));
+    a.appendChild(el("p", "", e.descripcion));
+    g.appendChild(a);
+  });
+  if (!g.children.length) g.appendChild(el("p", "", "Sin resultados."));
+}
+q.oninput = render; f.onchange = render; render();
+</script>
+</body>
+</html>
