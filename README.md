@@ -10,6 +10,8 @@ Algoritmos y estructuras listos para consultar (código en C++ por categoría, e
 
 ### Búsqueda
 - [Binary Search](implementaciones/busqueda/binary_search.cpp): búsqueda binaria sobre un arreglo (valor exacto, lower y upper bound) y sobre la respuesta (minimizar y maximizar).
+### Estructuras de datos
+- [Prefix Sums](implementaciones/estructuras_de_datos/prefix_sums.cpp): acumulados para consultas en O(1) (suma, mínimo, máximo, conteo y plantilla general con XOR).
 
 ## Upsolving
 Soluciones comentadas de nuestros contests semanales (en `soluciones/`).
