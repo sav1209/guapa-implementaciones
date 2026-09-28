@@ -33,7 +33,7 @@ int binarySearch(vector<int>& a,int x){
     int l=0,r=(int)a.size()-1;
     while(l<=r){
         // m va a ser quien divida a la mitad y nos ayude a descartar lo que no sirva.
-        // [AGREGADO] Usamos l+(r-l)/2 en lugar de (l+r)/2 para evitar overflow con índices grandes.
+        //  Usamos l+(r-l)/2 en lugar de (l+r)/2 para evitar overflow con índices grandes.
         int m=l+(r-l)/2;
         // Encontramos el valor y regresamos la posición.
         if(a[m]==x)return m;
@@ -73,7 +73,7 @@ int lowerBound(vector<int>& a,int x){
 }
 
 int main(){
-    // [AGREGADO] Ejemplo de uso
+    //  Ejemplo de uso
     vector<int> a = {1, 3, 3, 5, 7, 9, 11};
     cout << binarySearch(a, 7) << "\n";                              // 4
     cout << binarySearch(a, 4) << "\n";                              // -1
@@ -100,12 +100,12 @@ int main(){
     F F F F V V V V
     imprime el mínimo x que cumple con algo (el primer verdadero de la función).
     */
-    // [AGREGADO] Ejemplo: el menor m tal que m*m >= 50 (respuesta: 8).
+    //  Ejemplo: el menor m tal que m*m >= 50 (respuesta: 8).
     auto puede = [](ll m){ return m*m >= 50; };
     ll minimo=0, maximo=100;
     // Establecemos los límites de la binaria, generalmente va de 0 a un valor muy grande como 1e18
     // que pasa muy bien en límites de 1 segundo, pero si de antemano se conoce entre qué valores puede estar la solución así se establecen el mínimo y el máximo.
-    // [AGREGADO] Con límites de hasta 1e18 usa long long (ll); int no alcanza.
+    //  Con límites de hasta 1e18 usa long long (ll); int no alcanza.
     ll l=minimo, r=maximo;
     while(l<r){
         // m es igual al piso de la división
@@ -118,7 +118,7 @@ int main(){
         // Si es falso, avanzamos 1 ya que sabemos que ese es falso y necesitamos el primer verdadero por lo que al menos está uno después.
         else l=m+1;
     }
-    // [AGREGADO] Ojo: si ningún valor cumple, l termina valiendo maximo. Verifica puede(l) al final si eso puede pasar.
+    //  Ojo: si ningún valor cumple, l termina valiendo maximo. Verifica puede(l) al final si eso puede pasar.
     // Por último imprimimos la l que nos da el primer valor que cumple con algo.
     cout<<l<<endl;   // 8
     }
@@ -129,7 +129,7 @@ int main(){
     V V V V V F F F F F
     imprime el máximo x que cumple con algo (el último verdadero de la función).
     */
-    // [AGREGADO] Ejemplo: el mayor m tal que m*m <= 50 (respuesta: 7).
+    //  Ejemplo: el mayor m tal que m*m <= 50 (respuesta: 7).
     auto puede = [](ll m){ return m*m <= 50; };
     ll minimo=0, maximo=100;
     // Establecemos los límites de la binaria, generalmente va de 0 a un valor muy grande como 1e18.
@@ -146,13 +146,13 @@ int main(){
         // Si es falso sabemos que por lo menos tiene que estar una antes por lo que reducimos r y restamos 1.
         else r=m-1;   // [CORREGIDO] antes era l=m+1 (y faltaba el ;)
     }
-    // [AGREGADO] Ojo: si ningún valor cumple, l termina valiendo minimo. Verifica puede(l) al final si eso puede pasar.
+    //  Ojo: si ningún valor cumple, l termina valiendo minimo. Verifica puede(l) al final si eso puede pasar.
     // Por último imprimimos la l que nos da el último valor que cumple con algo.
     cout<<l<<endl;   // 7
     }
 
     /*La diferencia entre minimizar y maximizar es la división piso o techo para evitar un loop infinito en el while.
-    [AGREGADO] Al minimizar hacemos r=m: con piso m<r siempre, así el rango se achica. Al maximizar hacemos l=m: con techo m>l siempre.
+     Al minimizar hacemos r=m: con piso m<r siempre, así el rango se achica. Al maximizar hacemos l=m: con techo m>l siempre.
     */
     return 0;
 }
