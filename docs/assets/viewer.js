@@ -48,6 +48,12 @@
     return (code || pre).textContent.replace(/\n$/, '');
   }
 
+  /* ---------- Modos de vista ---------- */
+  function fijarModo(modo) {
+    document.body.classList.remove('modo-explicacion', 'modo-codigo', 'modo-ambos');
+    document.body.classList.add('modo-' + modo);
+  }
+
   /* ---------- Selección ---------- */
   function crearCheck() {
     var lbl = document.createElement('label');
@@ -106,6 +112,7 @@
   /* ---------- Inicio ---------- */
   function iniciar() {
     if (window.hljs) window.hljs.highlightAll();
+    fijarModo('ambos');
 
     // Casillas de selección
     $$('.paso').forEach(function (p) {
@@ -144,13 +151,17 @@
     if (barra) {
       barra.className = 'barra';
       barra.innerHTML =
+        '<span class="modos" role="radiogroup" aria-label="Modo de vista">' +
+          '<label><input type="radio" name="modo-vista" value="explicacion"> Solo explicación</label>' +
+          '<label><input type="radio" name="modo-vista" value="codigo"> Solo código</label>' +
+          '<label><input type="radio" name="modo-vista" value="ambos" checked> Ambos</label>' +
+        '</span>' +
         '<button type="button" data-a="imp-sel">Imprimir selección</button>' +
         '<button type="button" data-a="imp-todo">Imprimir todo</button>' +
         '<button type="button" data-a="sel-todo">Seleccionar todo</button>' +
         '<button type="button" data-a="limpiar">Limpiar selección</button>' +
         '<button type="button" data-a="copiar-sel">Copiar código de lo seleccionado</button>' +
-        '<button type="button" data-a="ver-cpp">Ver .cpp completo</button>' +
-        '<label class="chk-texto"><input type="checkbox" id="ocultar-texto"> Ocultar texto explicativo</label>';
+        '<button type="button" data-a="ver-cpp">Ver .cpp completo</button>';
 
       barra.addEventListener('click', function (e) {
         var a = e.target.getAttribute && e.target.getAttribute('data-a');
@@ -178,8 +189,8 @@
         }
       });
 
-      $('#ocultar-texto').addEventListener('change', function (e) {
-        document.body.classList.toggle('sin-texto', e.target.checked);
+      barra.addEventListener('change', function (e) {
+        if (e.target.name === 'modo-vista') fijarModo(e.target.value);
       });
     }
 
