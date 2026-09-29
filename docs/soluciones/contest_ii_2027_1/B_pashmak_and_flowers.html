@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B. Pashmak and Flowers · Contest II - 2027-1 · Upsolving · GUAPA</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body data-pagina="solucion" data-seccion="solucion">
+
+<header class="topbar">
+  <a class="marca" href="../../index.html">GUAPA</a>
+</header>
+
+<main>
+  <nav class="migas" aria-label="Ruta">
+    <a href="../../index.html#upsolving">Inicio</a> ›
+    <a href="../../index.html#upsolving">Upsolving</a> ›
+    <a href="index.html">Contest II - 2027-1</a> ›
+    <span>B. Pashmak and Flowers</span>
+    <span class="insignia">Upsolving</span>
+  </nav>
+
+  <div class="encabezado-impresion">GUAPA · Upsolving · Contest II - 2027-1 · B. Pashmak and Flowers · https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/B</div>
+
+  <div class="pagina-cab">
+    <h1>B. Pashmak and Flowers</h1>
+    <p class="enlaces">
+      <a href="https://codeforces.com/group/P35WkNZDR8/contest/713751" target="_blank" rel="noopener">Contest II - 2027-1 ↗</a> ·
+      <a href="https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/B" target="_blank" rel="noopener">Ver problema original ↗</a>
+    </p>
+    <div class="meta">
+      <span class="badge neutro">Conteo</span>
+      <span class="badge neutro">Combinatoria</span>
+      <span class="badge">O(n)</span>
+      <span class="badge">Memoria O(n)</span>
+    </div>
+  </div>
+
+  <div id="barra-acciones"></div>
+
+  <div id="contenido">
+
+    <section class="seccion" data-id="s1">
+      <h2>Planteamiento</h2>
+      <div class="paso" data-id="s1p1">
+        <div class="texto">
+          <p>El problema nos dice que dado un arreglo <code>b</code> con <code>n</code> flores, donde cada posición <code>b[i]</code> representa el nivel de belleza de una flor, se quiere saber la mayor diferencia de belleza que se puede obtener entre 2 flores y de cuántas maneras se pueden seleccionar parejas de flores que cumplan la condición de tener esa máxima diferencia de belleza entre ellas.</p>
+          <p>Para saber qué flores tienen la mayor diferencia nos conviene tomar las de belleza mayor y las de belleza menor del arreglo. Esto nos garantiza que las combinaciones cumplirán la condición de tener la máxima diferencia entre ellas.</p>
+        </div>
+      </div>
+      <div class="paso" data-id="s1p2">
+        <pre class="codigo"><code class="language-cpp">void solve() {
+    ll n,mini=LLONG_MAX,maxi=LLONG_MIN,cantm=0,cantx=0;
+    cin&gt;&gt;n;
+    vll b(n);</code></pre>
+      </div>
+      <div class="paso" data-id="s1p3">
+        <div class="texto"><p>Primero obtenemos el valor máximo y el mínimo del arreglo.</p></div>
+        <pre class="codigo"><code class="language-cpp">    for(int i=0;i&lt;n;i++){
+        cin&gt;&gt;b[i];
+        mini=min(mini,b[i]);
+        maxi=max(maxi,b[i]);
+    }</code></pre>
+      </div>
+      <div class="paso" data-id="s1p4">
+        <div class="texto"><p>Después calculamos cuántas flores hay con ese valor.</p></div>
+        <pre class="codigo"><code class="language-cpp">    for(int i=0;i&lt;n;i++){
+        if(b[i]==mini)cantm++;
+        if(b[i]==maxi)cantx++;
+    }</code></pre>
+      </div>
+      <div class="paso" data-id="s1p5">
+        <div class="texto"><p>Imprimimos la máxima diferencia entre el valor más grande y el más pequeño.</p></div>
+        <pre class="codigo"><code class="language-cpp">    cout&lt;&lt;maxi-mini&lt;&lt;" ";</code></pre>
+      </div>
+    </section>
+
+    <section class="seccion" data-id="s2">
+      <h2>Cantidad de parejas</h2>
+      <div class="paso" data-id="s2p1">
+        <div class="texto"><p>Por último es importante notar 2 casos.</p></div>
+      </div>
+      <div class="paso" data-id="s2p2">
+        <div class="texto"><p>Si el máximo y el mínimo son diferentes hay que multiplicar las 2 cantidades de flores que hay, ya que esto nos da la cantidad de maneras en que puedo tomar las parejas.</p></div>
+        <pre class="codigo"><code class="language-cpp">    if(mini!=maxi){
+        cout&lt;&lt;cantm*cantx&lt;&lt;"\n";
+    }</code></pre>
+      </div>
+      <div class="paso" data-id="s2p3">
+        <div class="texto"><p>Si son iguales, todas las flores tienen la misma belleza y cualquier pareja sirve, así que debemos saber ¿cuántas maneras hay de seleccionar 2 flores diferentes de un grupo de <code>n</code>? Lo cual se responde con <code>n</code> en 2, o simplificando nos queda como <code>(n*(n-1))/2</code>. En este caso <code>cantx</code> es igual a <code>n</code>.</p></div>
+        <pre class="codigo"><code class="language-cpp">    else{
+        cout&lt;&lt;cantx*(cantx-1)/2&lt;&lt;"\n";
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="seccion" data-id="s3">
+      <h2>Programa principal</h2>
+      <div class="paso" data-id="s3p1">
+        <div class="texto"><p>El problema tiene un solo caso de prueba, por lo que llamamos <code>solve()</code> una sola vez.</p></div>
+        <pre class="codigo"><code class="language-cpp">int main(){
+    cin.tie(0)-&gt;sync_with_stdio(0);
+    solve();
+}</code></pre>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-pie">
+    <a href="A_black_and_white_stripe.html">← Anterior: A. Black and White Stripe</a>
+    <a href="index.html">Índice del contest →</a>
+  </div>
+</main>
+
+<script type="text/plain" id="cpp-fuente">
+/*
+ * B. Pashmak and Flowers
+ * Contest: Contest II - 2027-1 (https://codeforces.com/group/P35WkNZDR8/contest/713751)
+ * Problema: B. Pashmak and Flowers (https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/B)
+ * Idea principal: la máxima diferencia es maximo-minimo; las parejas se cuentan con las veces que aparece cada extremo.
+ * Complejidad: O(n).
+ *              Memoria: O(n).
+ * Técnicas: conteo, combinatoria básica (combinaciones de 2 en n).
+ */
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+using vll = vector<ll>;
+
+/*B. Pashmak and Flowers
+El problema nos dice que dado un arreglo b con n flores, donde cada posición b[i]
+representa el nivel de belleza de una flor, se quiere saber la mayor diferencia de belleza que se puede
+obtener entre 2 flores y de cuántas maneras se pueden seleccionar parejas de flores que cumplan la condición
+de tener esa máxima diferencia de belleza entre ellas.
+
+Para saber qué flores tienen la mayor diferencia nos conviene tomar las de belleza mayor y las de
+belleza menor del arreglo. Esto nos garantiza que las combinaciones cumplirán la condición de
+tener la máxima diferencia entre ellas.
+*/
+void solve() {
+    ll n,mini=LLONG_MAX,maxi=LLONG_MIN,cantm=0,cantx=0;
+    cin>>n;
+    vll b(n);
+    //Primero obtenemos el valor máximo y el mínimo del arreglo.
+    for(int i=0;i<n;i++){
+        cin>>b[i];
+        mini=min(mini,b[i]);
+        maxi=max(maxi,b[i]);
+    }
+    //Después calculamos cuántas flores hay con ese valor.
+    for(int i=0;i<n;i++){
+        if(b[i]==mini)cantm++;
+        if(b[i]==maxi)cantx++;
+    }
+    //Imprimimos la máxima diferencia entre el valor más grande y el más pequeño.
+    cout<<maxi-mini<<" ";
+    /*Cantidad de parejas
+    Por último es importante notar 2 casos.
+    */
+    /*Si el máximo y el mínimo son diferentes hay que multiplicar las 2 cantidades de flores
+    que hay, ya que esto nos da la cantidad de maneras en que puedo tomar las parejas.
+    */
+    if(mini!=maxi){
+        cout<<cantm*cantx<<"\n";
+    }
+    /*Si son iguales, todas las flores tienen la misma belleza y cualquier pareja sirve, así que debemos saber
+    ¿cuántas maneras hay de seleccionar 2 flores diferentes de un grupo de n? Lo cual se responde
+    con n en 2, o simplificando nos queda como (n*(n-1))/2. En este caso cantx es igual a n.
+    */
+    else{
+        cout<<cantx*(cantx-1)/2<<"\n";
+    }
+}
+
+/*Programa principal
+El problema tiene un solo caso de prueba, por lo que llamamos solve() una sola vez.
+*/
+int main(){
+    cin.tie(0)->sync_with_stdio(0);
+    solve();
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="../../assets/viewer.js"></script>
+</body>
+</html>
