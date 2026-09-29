@@ -82,7 +82,7 @@ select{padding:.35rem .6rem;border-radius:8px;border:1px solid var(--borde);back
 .barra{position:sticky;top:0;z-index:25;display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;padding:.5rem 0;margin-bottom:.6rem;background:var(--bg);border-bottom:1px solid var(--borde)}
 .barra button{padding:.3rem .7rem;border-radius:8px;border:1px solid var(--borde);background:var(--card);color:var(--fg);font:inherit;font-size:.88rem;cursor:pointer}
 .barra button:hover{border-color:var(--acc)}
-.barra .chk-texto{display:flex;align-items:center;gap:.35rem;font-size:.88rem;color:var(--muted);margin-left:auto}
+
 
 /* Secciones y pasos */
 .seccion{margin:1.6rem 0}
@@ -101,8 +101,19 @@ pre.codigo code{background:none;padding:0;font:inherit;color:inherit}
 .texto+pre.codigo{margin-top:.2rem}
 .btn-copiar{position:sticky;float:right;top:0;margin:-.3rem -.5rem 0 .5rem;padding:.15rem .55rem;border-radius:6px;border:1px solid var(--borde);background:var(--card);color:var(--muted);font:.78rem var(--sans);cursor:pointer}
 .btn-copiar:hover{color:var(--acc);border-color:var(--acc)}
-.sin-texto .texto{display:none}
-.sin-texto .paso:not(:has(pre)){display:none}
+.modo-explicacion #contenido pre.codigo{display:none}
+.modo-explicacion #contenido .paso:not(:has(.texto)){display:none}
+.modo-codigo #contenido .texto{display:none}
+.modo-codigo #contenido .paso:not(:has(pre.codigo)){display:none}
+.modo-codigo #contenido .seccion:not(:has(pre.codigo)){display:none}
+.barra .modos{display:flex;flex-wrap:wrap;align-items:center;gap:.7rem;margin-right:.6rem;font-size:.88rem;color:var(--muted)}
+.barra .modos label{display:flex;align-items:center;gap:.25rem;cursor:pointer}
+.barra .modos input{accent-color:var(--acc)}
+.enlaces{margin:.2rem 0 .6rem;font-size:.95rem}
+.fila .letra{text-decoration:none}
+.fila .tit{color:var(--fg)}
+.ext{margin-left:auto;font-size:.85rem}
+.grupo h3 .ext{font-weight:400}
 #vista-cpp{display:none}
 #vista-cpp.visible{display:block}
 .vista-cpp-cab{margin:.2rem 0 .5rem;color:var(--muted);font-size:.9rem}
@@ -121,7 +132,7 @@ pre.codigo code{background:none;padding:0;font:inherit;color:inherit}
 
 @media (max-width:600px){
   .paso{padding-left:2rem}
-  .barra .chk-texto{margin-left:0}
+  .barra .modos{margin-left:0}
   .hero h1{font-size:1.6rem}
 }
 
