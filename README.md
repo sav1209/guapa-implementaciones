@@ -16,7 +16,9 @@ Algoritmos y estructuras listos para consultar (código en C++ por categoría, e
 ## Upsolving
 Soluciones comentadas de nuestros contests semanales (en `soluciones/`).
 
-Aún no hay contests publicados.
+### Contest II - 2027-1
+[Ver contest](https://codeforces.com/group/P35WkNZDR8/contest/713751)
+- [A. Black and White Stripe](soluciones/contest_ii_2027_1/A_black_and_white_stripe.cpp): sliding window y prefix de frecuencias para hallar la mínima cantidad de 'W' en una ventana de tamaño k.
 
 ## Estructura
 - `implementaciones/`: código en C++ por categoría (grafos, strings, estructuras_de_datos, busqueda…).
