@@ -19,6 +19,7 @@ Soluciones comentadas de nuestros contests semanales (en `soluciones/`).
 ### Contest II - 2027-1
 [Ver contest](https://codeforces.com/group/P35WkNZDR8/contest/713751)
 - [A. Black and White Stripe](soluciones/contest_ii_2027_1/A_black_and_white_stripe.cpp): sliding window y prefix de frecuencias para hallar la mínima cantidad de 'W' en una ventana de tamaño k.
+- [B. Pashmak and Flowers](soluciones/contest_ii_2027_1/B_pashmak_and_flowers.cpp): conteo de mínimos y máximos; la máxima diferencia es maximo-minimo y las parejas son cantm·cantx (o n(n-1)/2 si todos son iguales).
 
 ## Estructura
 - `implementaciones/`: código en C++ por categoría (grafos, strings, estructuras_de_datos, busqueda…).
