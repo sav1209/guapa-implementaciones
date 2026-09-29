@@ -13,4 +13,18 @@ const CATALOG = [
     archivo: "soluciones/contest_ii_2027_1/A_black_and_white_stripe.html",
     cpp: "soluciones/contest_ii_2027_1/A_black_and_white_stripe.cpp",
     tags: ["sliding window", "prefix sum", "strings", "ventana deslizante"]
-  }];
+  },
+  ,  {
+    tipo: "solucion",
+    contest: "Contest II - 2027-1",
+    contestSlug: "contest_ii_2027_1",
+    contestUrl: "https://codeforces.com/group/P35WkNZDR8/contest/713751",
+    problema: "B",
+    tituloProblema: "Pashmak and Flowers",
+    problemaUrl: "https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/B",
+    descripcion: "Máxima diferencia de belleza entre dos flores y de cuántas maneras se puede elegir una pareja con esa diferencia: contar mínimos y máximos, y combinaciones de 2 en n cuando todos son iguales.",
+    archivo: "soluciones/contest_ii_2027_1/B_pashmak_and_flowers.html",
+    cpp: "soluciones/contest_ii_2027_1/B_pashmak_and_flowers.cpp",
+    tags: ["conteo", "combinatoria", "máximo y mínimo", "matemáticas"]
+  }
+];
