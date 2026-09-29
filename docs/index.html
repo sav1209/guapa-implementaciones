@@ -61,16 +61,16 @@
   function nombreCat(c) {
     return CAT_NOMBRES[c] || (c.charAt(0).toUpperCase() + c.slice(1).replace(/_/g, ' '));
   }
-  function pad(n) { return (n < 10 ? '0' : '') + n; }
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
   function norm(s) { return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  function tituloDe(e) { return e.tituloProblema || e.titulo || ''; }
   function coincide(e, q) {
     if (!q) return true;
-    var texto = norm([e.titulo, e.descripcion, e.problema || '', (e.tags || []).join(' ')].join(' '));
+    var texto = norm([tituloDe(e), e.descripcion, e.contest || '', e.problema || '', (e.tags || []).join(' ')].join(' '));
     return q.split(/\s+/).every(function (w) { return texto.indexOf(w) >= 0; });
   }
   function tagsHtml(e) {
@@ -87,9 +87,17 @@
   var cats = Array.from(new Set(IMPL.map(function (e) { return e.categoria; }))).sort();
   selCat.innerHTML = '<option value="">Todas las categorías</option>' +
     cats.map(function (c) { return '<option value="' + esc(c) + '">' + esc(nombreCat(c)) + '</option>'; }).join('');
-  var contests = Array.from(new Set(UPS.map(function (e) { return e.contest; }))).sort(function (a, b) { return b - a; });
+
+  // Contests: del más reciente (último agregado en catalog.js) al más antiguo
+  var contests = [];
+  UPS.forEach(function (e) {
+    if (!contests.some(function (c) { return c.slug === e.contestSlug; })) {
+      contests.push({ slug: e.contestSlug, nombre: e.contest, url: e.contestUrl });
+    }
+  });
+  contests.reverse();
   selContest.innerHTML = '<option value="">Todos los contests</option>' +
-    contests.map(function (c) { return '<option value="' + c + '">Contest ' + pad(c) + '</option>'; }).join('');
+    contests.map(function (c) { return '<option value="' + esc(c.slug) + '">' + esc(c.nombre) + '</option>'; }).join('');
 
   function renderImpl(q) {
     var cat = selCat.value;
@@ -110,18 +118,20 @@
 
   function renderUps(q) {
     var ct = selContest.value;
-    var items = UPS.filter(function (e) { return (!ct || String(e.contest) === ct) && coincide(e, q); });
-    var grupos = {};
-    items.forEach(function (e) { (grupos[e.contest] = grupos[e.contest] || []).push(e); });
-    var html = Object.keys(grupos).map(Number).sort(function (a, b) { return b - a; }).map(function (c) {
-      var lista = grupos[c].slice().sort(function (a, b) { return String(a.problema).localeCompare(String(b.problema)); });
-      return '<div class="grupo" id="contest-' + pad(c) + '"><h3><a href="soluciones/contest_' + pad(c) +
-        '/index.html">Contest ' + pad(c) + '</a> <span class="conteo">' + lista.length + '</span></h3>' +
+    var items = UPS.filter(function (e) { return (!ct || e.contestSlug === ct) && coincide(e, q); });
+    var html = contests.map(function (c) {
+      var lista = items.filter(function (e) { return e.contestSlug === c.slug; })
+        .sort(function (a, b) { return String(a.problema).localeCompare(String(b.problema)); });
+      if (!lista.length) return '';
+      return '<div class="grupo" id="contest-' + esc(c.slug) + '"><h3><a href="soluciones/' + esc(c.slug) +
+        '/index.html">' + esc(c.nombre) + '</a> <span class="conteo">' + lista.length + '</span>' +
+        '<a class="ext" href="' + esc(c.url) + '" target="_blank" rel="noopener">Ver contest ↗</a></h3>' +
         lista.map(function (e) {
-          return '<a class="fila" href="' + esc(e.archivo) + '"><span class="letra">' + esc(e.problema) +
-            '</span><span class="tit">' + esc(e.titulo) + '</span>' +
+          return '<div class="fila"><a class="letra" href="' + esc(e.archivo) + '">' + esc(e.problema) +
+            '</a><a class="tit" href="' + esc(e.archivo) + '">' + esc(e.tituloProblema) + '</a>' +
             (e.dificultad ? '<span class="dif">' + esc(e.dificultad) + '</span>' : '') +
-            tagsHtml(e) + '</a>';
+            tagsHtml(e) +
+            '<a class="ext" href="' + esc(e.problemaUrl) + '" target="_blank" rel="noopener">Problema original ↗</a></div>';
         }).join('') + '</div>';
     }).join('');
     var vacio = UPS.length ? 'Sin resultados' : 'Aún no hay contests publicados';
