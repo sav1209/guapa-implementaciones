@@ -22,6 +22,7 @@ Soluciones comentadas de nuestros contests semanales (en `soluciones/`).
 - [B. Pashmak and Flowers](soluciones/contest_ii_2027_1/B_pashmak_and_flowers.cpp): conteo de mínimos y máximos; la máxima diferencia es maximo-minimo y las parejas son cantm·cantx (o n(n-1)/2 si todos son iguales).
 - [C. Interesting drink](soluciones/contest_ii_2027_1/C_interesting_drink.cpp): ordenar los precios y usar búsqueda binaria para contar en cuántas tiendas alcanza con m_i monedas.
 - [D. Badge](soluciones/contest_ii_2027_1/D_badge.cpp): para cada estudiante, seguir la cadena de culpas con un arreglo de visitados hasta el primero que se repite (O(n²)).
+- [E. Magic Powder - 2](soluciones/contest_ii_2027_1/E_magic_powder_2.cpp): binaria sobre la respuesta para hallar el máximo de galletas; una cantidad es posible si el polvo mágico cubre lo que falta de cada ingrediente.
 
 ## Estructura
 - `implementaciones/`: código en C++ por categoría (grafos, strings, estructuras_de_datos, busqueda…).
