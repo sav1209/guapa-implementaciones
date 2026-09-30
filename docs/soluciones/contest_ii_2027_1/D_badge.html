@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D. Badge · Contest II - 2027-1 · Upsolving · GUAPA</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body data-pagina="solucion" data-seccion="solucion">
+
+<header class="topbar">
+  <a class="marca" href="../../index.html">GUAPA</a>
+</header>
+
+<main>
+  <nav class="migas" aria-label="Ruta">
+    <a href="../../index.html#upsolving">Inicio</a> ›
+    <a href="../../index.html#upsolving">Upsolving</a> ›
+    <a href="index.html">Contest II - 2027-1</a> ›
+    <span>D. Badge</span>
+    <span class="insignia">Upsolving</span>
+  </nav>
+
+  <div class="encabezado-impresion">GUAPA · Upsolving · Contest II - 2027-1 · D. Badge · https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/D</div>
+
+  <div class="pagina-cab">
+    <h1>D. Badge</h1>
+    <p class="enlaces">
+      <a href="https://codeforces.com/group/P35WkNZDR8/contest/713751" target="_blank" rel="noopener">Contest II - 2027-1 ↗</a> ·
+      <a href="https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/D" target="_blank" rel="noopener">Ver problema original ↗</a>
+    </p>
+    <div class="meta">
+      <span class="badge neutro">Simulación</span>
+      <span class="badge neutro">Grafos</span>
+      <span class="badge">O(n²)</span>
+      <span class="badge">Memoria O(n)</span>
+    </div>
+  </div>
+
+  <div id="barra-acciones"></div>
+
+  <div id="contenido">
+
+    <section class="seccion" data-id="s1">
+      <h2>Planteamiento</h2>
+      <div class="paso" data-id="s1p1">
+        <div class="texto">
+          <p>El problema nos dice que un grupo de estudiantes hizo algo malo, la maestra visitó a cada uno y cada uno le echó la culpa a alguien más.</p>
+          <p>El problema consiste en, para cada estudiante como punto de partida, encontrar el primero que se repite en esta cadena de culpas. Como cada estudiante culpa a exactamente uno, la cadena siempre repite a alguien en a lo más <code>n</code> pasos, por lo que cada simulación es <span class="badge">O(n)</span> y, al hacer una por estudiante, la complejidad total es <span class="badge">O(n^2)</span>, suficiente para <code>n=1000</code>.</p>
+        </div>
+      </div>
+      <div class="paso" data-id="s1p2">
+        <pre class="codigo"><code class="language-cpp">void solve() {
+    ll n;cin&gt;&gt;n;
+    vll a(n);
+    for(int i=0;i&lt;n;i++){
+        cin&gt;&gt;a[i];//Leemos los alumnos y los 0 indexamos para trabajar directamente con el arreglo
+        a[i]--;
+    }
+    for(int i=0;i&lt;n;i++){
+        vector&lt;bool&gt; vis(n,true);//Vector de visitados para saber cuáles alumnos no hemos visitado (true = sin visitar)
+        ll x=i;
+        while(vis[x]){//mientras no lo hayamos visitado lo visitamos
+            vis[x]=false;//lo marcamos como falso para indicar que ya lo visitamos
+            x=a[x];//visitamos al que le echó la culpa
+        }
+        cout&lt;&lt;x+1&lt;&lt;" ";//si alguno estaba visitado salimos del bucle e imprimimos el índice +1 por el 0 indexado del principio.
+    }
+    cout&lt;&lt;endl;
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="seccion" data-id="s2">
+      <h2>Programa principal</h2>
+      <div class="paso" data-id="s2p1">
+        <div class="texto"><p>El problema tiene un solo caso de prueba, por lo que llamamos <code>solve()</code> una sola vez.</p></div>
+        <pre class="codigo"><code class="language-cpp">int main(){
+    cin.tie(0)-&gt;sync_with_stdio(0);
+    solve();
+}</code></pre>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-pie">
+    <a href="C_interesting_drink.html">← Anterior: C. Interesting drink</a>
+    <a href="index.html">Índice del contest →</a>
+  </div>
+</main>
+
+<script type="text/plain" id="cpp-fuente">
+/*
+ * D. Badge
+ * Contest: Contest II - 2027-1 (https://codeforces.com/group/P35WkNZDR8/contest/713751)
+ * Problema: D. Badge (https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/D)
+ * Idea principal: para cada estudiante, seguir la cadena de culpas hasta llegar al primero que se repite.
+ * Complejidad: O(n^2): cada simulación recorre a lo más n estudiantes y se hace una por estudiante.
+ *              Memoria: O(n).
+ * Técnicas: simulación, grafos (recorrido con arreglo de visitados).
+ */
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+using vll = vector<ll>;
+
+#define endl '\n'
+
+/*D. Badge
+El problema nos dice que un grupo de estudiantes hizo algo malo, la maestra visitó a cada uno y cada
+uno le echó la culpa a alguien más.
+
+El problema consiste en, para cada estudiante como punto de partida, encontrar el primero que se repite en esta cadena de culpas.
+Como cada estudiante culpa a exactamente uno, la cadena siempre repite a alguien en a lo más n pasos,
+por lo que cada simulación es O(n) y, al hacer una por estudiante, la complejidad total es O(n^2), suficiente para n=1000.
+*/
+void solve() {
+    ll n;cin>>n;
+    vll a(n);
+    for(int i=0;i<n;i++){
+        cin>>a[i];//Leemos los alumnos y los 0 indexamos para trabajar directamente con el arreglo
+        a[i]--;
+    }
+    for(int i=0;i<n;i++){
+        vector<bool> vis(n,true);//Vector de visitados para saber cuáles alumnos no hemos visitado (true = sin visitar)
+        ll x=i;
+        while(vis[x]){//mientras no lo hayamos visitado lo visitamos
+            vis[x]=false;//lo marcamos como falso para indicar que ya lo visitamos
+            x=a[x];//visitamos al que le echó la culpa
+        }
+        cout<<x+1<<" ";//si alguno estaba visitado salimos del bucle e imprimimos el índice +1 por el 0 indexado del principio.
+    }
+    cout<<endl;
+}
+
+/*Programa principal
+El problema tiene un solo caso de prueba, por lo que llamamos solve() una sola vez.
+*/
+int main(){
+    cin.tie(0)->sync_with_stdio(0);
+    solve();
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="../../assets/viewer.js"></script>
+</body>
+</html>
