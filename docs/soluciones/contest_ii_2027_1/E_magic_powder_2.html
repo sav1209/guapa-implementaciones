@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E. Magic Powder - 2 · Contest II - 2027-1 · Upsolving · GUAPA</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body data-pagina="solucion" data-seccion="solucion">
+
+<header class="topbar">
+  <a class="marca" href="../../index.html">GUAPA</a>
+</header>
+
+<main>
+  <nav class="migas" aria-label="Ruta">
+    <a href="../../index.html#upsolving">Inicio</a> ›
+    <a href="../../index.html#upsolving">Upsolving</a> ›
+    <a href="index.html">Contest II - 2027-1</a> ›
+    <span>E. Magic Powder - 2</span>
+    <span class="insignia">Upsolving</span>
+  </nav>
+
+  <div class="encabezado-impresion">GUAPA · Upsolving · Contest II - 2027-1 · E. Magic Powder - 2 · https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/E</div>
+
+  <div class="pagina-cab">
+    <h1>E. Magic Powder - 2</h1>
+    <p class="enlaces">
+      <a href="https://codeforces.com/group/P35WkNZDR8/contest/713751" target="_blank" rel="noopener">Contest II - 2027-1 ↗</a> ·
+      <a href="https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/E" target="_blank" rel="noopener">Ver problema original ↗</a>
+    </p>
+    <div class="meta">
+      <span class="badge neutro">Binary search</span>
+      <span class="badge">O(n·log(2·10^9))</span>
+      <span class="badge">Memoria O(n)</span>
+    </div>
+  </div>
+
+  <div id="barra-acciones"></div>
+
+  <div id="contenido">
+
+    <section class="seccion" data-id="s1">
+      <h2>Planteamiento</h2>
+      <div class="paso" data-id="s1p1">
+        <div class="texto">
+          <p>El problema nos dice que debemos hornear galletas; para las galletas ocupamos <code>n</code> ingredientes. De antemano sabemos cuántos gramos <code>a_i</code> necesitamos de cada uno y cuántos <code>b_i</code> tenemos en un principio. Además tenemos <code>k</code> gramos de polvo mágico que podemos usar para sustituir cualquier ingrediente.</p>
+          <p>Podemos realizar una búsqueda binaria sobre la respuesta para encontrar la solución. Si podemos hacer <code>x</code> galletas también podemos hacer <code>x-1</code>, por lo que la función es de la forma:</p>
+          <p class="patron"><code>V V V F F F</code></p>
+          <p>Como <code>a_i&gt;=1</code>, <code>b_i&lt;=10^9</code> y <code>k&lt;=10^9</code>, a lo mucho podemos hacer <code>2*10^9</code> galletas (todo lo que tenemos de un ingrediente más todo el polvo), por lo que podemos aprovechar eso y usar una binaria entre <code>0</code> y <code>2*10^9</code>. Esto nos da una complejidad de <span class="badge">O(n*log(2*10^9))</span>. Con ese límite, <code>a_i*x</code> es a lo mucho <code>10^9*2*10^9=2*10^18</code>, que cabe en un <code>long long</code> (con <code>1e10</code> se desbordaría).</p>
+        </div>
+      </div>
+      <div class="paso" data-id="s1p2">
+        <pre class="codigo"><code class="language-cpp">ll n,k;
+vll a,b;
+bool puede(ll x){
+    ll ans=0;
+    for(int i=0;i&lt;n;i++){//Recorremos el arreglo sumando lo que nos falta de cada ingrediente
+        ans+=max(a[i]*x-b[i],0LL);//Agarramos lo que nos falta o 0, si nos sobra ingrediente
+        if(ans&gt;k)return false;//Si la suma es mayor a k, esa cantidad no la podemos hacer.
+    }
+    return true;
+}
+void solve() {
+    cin&gt;&gt;n&gt;&gt;k;
+    a.resize(n),b.resize(n);
+    for(auto &amp;x:a)cin&gt;&gt;x;
+    for(auto &amp;x:b)cin&gt;&gt;x;</code></pre>
+      </div>
+      <div class="paso" data-id="s1p3">
+        <div class="texto"><p>Calculamos la binaria de la forma <code>V V V F F F</code> para encontrar el último que se cumple. Los límites van de <code>0</code> a <code>2*10^9</code>, que es lo máximo que podríamos llegar a hacer.</p></div>
+        <pre class="codigo"><code class="language-cpp">    ll l=0,r=2000000000LL;
+    while(l&lt;r){</code></pre>
+      </div>
+      <div class="paso" data-id="s1p4">
+        <div class="texto"><p><code>m</code> es igual al techo de la división, para evitar un loop infinito al maximizar.</p></div>
+        <pre class="codigo"><code class="language-cpp">        ll m=l+(r-l+1)/2;</code></pre>
+      </div>
+      <div class="paso" data-id="s1p5">
+        <div class="texto"><p>Si podemos hacer esa cantidad aumentamos <code>l</code>, ya que la respuesta es esa o está después.</p></div>
+        <pre class="codigo"><code class="language-cpp">        if(puede(m))l=m;</code></pre>
+      </div>
+      <div class="paso" data-id="s1p6">
+        <div class="texto"><p>Si no podemos hacer esa cantidad restamos 1 a <code>r</code>, ya que sabemos que la respuesta es como mínimo una menos.</p></div>
+        <pre class="codigo"><code class="language-cpp">        else r=m-1;
+    }</code></pre>
+      </div>
+      <div class="paso" data-id="s1p7">
+        <div class="texto"><p>Esa es la cantidad de galletas que podemos hacer.</p></div>
+        <pre class="codigo"><code class="language-cpp">    cout&lt;&lt;l&lt;&lt;endl;
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="seccion" data-id="s2">
+      <h2>Programa principal</h2>
+      <div class="paso" data-id="s2p1">
+        <div class="texto"><p>El problema tiene un solo caso de prueba, por lo que llamamos <code>solve()</code> una sola vez.</p></div>
+        <pre class="codigo"><code class="language-cpp">int main(){
+    cin.tie(0)-&gt;sync_with_stdio(0);
+    solve();
+}</code></pre>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-pie">
+    <a href="C_interesting_drink.html">← Anterior: C. Interesting drink</a>
+    <a href="index.html">Índice del contest →</a>
+  </div>
+</main>
+
+<script type="text/plain" id="cpp-fuente">
+/*
+ * E. Magic Powder - 2
+ * Contest: Contest II - 2027-1 (https://codeforces.com/group/P35WkNZDR8/contest/713751)
+ * Problema: E. Magic Powder - 2 (https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/E)
+ * Idea principal: binaria sobre la respuesta; x galletas son posibles si el polvo mágico alcanza para cubrir lo que falta de cada ingrediente.
+ * Complejidad: O(n*log(2*10^9)).
+ *              Memoria: O(n).
+ * Técnicas: binary search sobre la respuesta.
+ */
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+using vll = vector<ll>;
+
+#define endl '\n'
+
+/*E. Magic Powder - 2
+El problema nos dice que debemos hornear galletas; para las galletas ocupamos n ingredientes.
+De antemano sabemos cuántos gramos a_i necesitamos de cada uno y cuántos b_i tenemos en un principio.
+Además tenemos k gramos de polvo mágico que podemos usar para sustituir cualquier ingrediente.
+
+Podemos realizar una búsqueda binaria sobre la respuesta para encontrar la solución.
+Si podemos hacer x galletas también podemos hacer x-1, por lo que la función es de la forma V V V F F F.
+Como a_i>=1, b_i<=10^9 y k<=10^9, a lo mucho podemos hacer 2*10^9 galletas (todo lo que tenemos de un ingrediente más todo el polvo),
+por lo que podemos aprovechar eso y usar una binaria entre 0 y 2*10^9. Esto nos da una complejidad de O(n*log(2*10^9)).
+Con ese límite, a_i*x es a lo mucho 10^9*2*10^9=2*10^18, que cabe en un long long (con 1e10 se desbordaría).
+*/
+ll n,k;
+vll a,b;
+bool puede(ll x){
+    ll ans=0;
+    for(int i=0;i<n;i++){//Recorremos el arreglo sumando lo que nos falta de cada ingrediente
+        ans+=max(a[i]*x-b[i],0LL);//Agarramos lo que nos falta o 0, si nos sobra ingrediente
+        if(ans>k)return false;//Si la suma es mayor a k, esa cantidad no la podemos hacer.
+    }
+    return true;
+}
+void solve() {
+    cin>>n>>k;
+    a.resize(n),b.resize(n);
+    for(auto &x:a)cin>>x;
+    for(auto &x:b)cin>>x;
+    //Calculamos la binaria de la forma V V V F F F para encontrar el último que se cumple.
+    //Los límites van de 0 a 2*10^9, que es lo máximo que podríamos llegar a hacer.
+    ll l=0,r=2000000000LL;
+    while(l<r){
+        //m es igual al techo de la división, para evitar un loop infinito al maximizar.
+        ll m=l+(r-l+1)/2;
+        //Si podemos hacer esa cantidad aumentamos l, ya que la respuesta es esa o está después.
+        if(puede(m))l=m;
+        //Si no podemos hacer esa cantidad restamos 1 a r, ya que sabemos que la respuesta es como mínimo una menos.
+        else r=m-1;
+    }
+    //Esa es la cantidad de galletas que podemos hacer.
+    cout<<l<<endl;
+}
+
+/*Programa principal
+El problema tiene un solo caso de prueba, por lo que llamamos solve() una sola vez.
+*/
+int main(){
+    cin.tie(0)->sync_with_stdio(0);
+    solve();
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="../../assets/viewer.js"></script>
+</body>
+</html>
