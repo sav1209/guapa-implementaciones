@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C. Interesting drink · Contest II - 2027-1 · Upsolving · GUAPA</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body data-pagina="solucion" data-seccion="solucion">
+
+<header class="topbar">
+  <a class="marca" href="../../index.html">GUAPA</a>
+</header>
+
+<main>
+  <nav class="migas" aria-label="Ruta">
+    <a href="../../index.html#upsolving">Inicio</a> ›
+    <a href="../../index.html#upsolving">Upsolving</a> ›
+    <a href="index.html">Contest II - 2027-1</a> ›
+    <span>C. Interesting drink</span>
+    <span class="insignia">Upsolving</span>
+  </nav>
+
+  <div class="encabezado-impresion">GUAPA · Upsolving · Contest II - 2027-1 · C. Interesting drink · https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/C</div>
+
+  <div class="pagina-cab">
+    <h1>C. Interesting drink</h1>
+    <p class="enlaces">
+      <a href="https://codeforces.com/group/P35WkNZDR8/contest/713751" target="_blank" rel="noopener">Contest II - 2027-1 ↗</a> ·
+      <a href="https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/C" target="_blank" rel="noopener">Ver problema original ↗</a>
+    </p>
+    <div class="meta">
+      <span class="badge neutro">Binary search</span>
+      <span class="badge neutro">Ordenamiento</span>
+      <span class="badge">O(n log n + q log n)</span>
+      <span class="badge">Memoria O(n)</span>
+    </div>
+  </div>
+
+  <div id="barra-acciones"></div>
+
+  <div id="contenido">
+
+    <section class="seccion" data-id="s1">
+      <h2>Planteamiento</h2>
+      <div class="paso" data-id="s1p1">
+        <div class="texto">
+          <p>El problema nos dice que una persona quiere comprar su bebida favorita en una tienda. Hay <code>n</code> tiendas y quiere saber en cuántas la puede comprar si cada día tiene <code>m_i</code> monedas, y quiere saberlo durante <code>q</code> días.</p>
+          <p>Hacer una búsqueda completa y contar los lugares donde pueda comprar es demasiado para <code>n,q=10^5</code> (sería <span class="badge">O(n*q)</span>). Por lo que podemos ordenar las tiendas y hacer una búsqueda binaria para poder encontrar la última tienda donde pueda comprar.</p>
+        </div>
+      </div>
+      <div class="paso" data-id="s1p2">
+        <pre class="codigo"><code class="language-cpp">bool puede(ll m,ll x){//Esta es la condición que establecemos en la binaria.
+    if(m&lt;=x)return true;
+    return false;
+}
+void solve() {
+    vll a;
+    ll n;cin&gt;&gt;n;
+    for(int i=0;i&lt;n;i++){
+        ll x;cin&gt;&gt;x;
+        a.pb(x);
+    }</code></pre>
+      </div>
+      <div class="paso" data-id="s1p3">
+        <div class="texto"><p>Primero ordenamos las tiendas para poder aplicar la binaria.</p></div>
+        <pre class="codigo"><code class="language-cpp">    sort(all(a));
+    ll q;cin&gt;&gt;q;</code></pre>
+      </div>
+      <div class="paso" data-id="s1p4">
+        <div class="texto"><p>Hacemos la binaria para cada día.</p></div>
+        <pre class="codigo"><code class="language-cpp">    for(int i=0;i&lt;q;i++){
+        ll x;cin&gt;&gt;x;
+        ll l=0,r=n-1,m;</code></pre>
+      </div>
+      <div class="paso" data-id="s1p5">
+        <div class="texto">
+          <p>Buscamos el último <code>&lt;=x</code> en las tiendas. La función es de la forma:</p>
+          <p class="patron"><code>V V V V V F F F F F</code></p>
+        </div>
+        <pre class="codigo"><code class="language-cpp">        while(l&lt;=r){
+            m=l+(r-l)/2;
+            if(puede(a[m],x))l=m+1;
+            else r=m-1;
+        }</code></pre>
+      </div>
+      <div class="paso" data-id="s1p6">
+        <div class="texto"><p>Al terminar, <code>l</code> es la posición del primer precio mayor a <code>x</code>, o sea, la cantidad de tiendas con precio <code>&lt;= x</code>.</p></div>
+        <pre class="codigo"><code class="language-cpp">        cout&lt;&lt;l&lt;&lt;endl;
+    }
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="seccion" data-id="s2">
+      <h2>Programa principal</h2>
+      <div class="paso" data-id="s2p1">
+        <div class="texto"><p>El problema tiene un solo caso de prueba, por lo que llamamos <code>solve()</code> una sola vez.</p></div>
+        <pre class="codigo"><code class="language-cpp">int main(){
+    cin.tie(0)-&gt;sync_with_stdio(0);
+    solve();
+}</code></pre>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav-pie">
+    <a href="B_pashmak_and_flowers.html">← Anterior: B. Pashmak and Flowers</a>
+    <a href="index.html">Índice del contest →</a>
+  </div>
+</main>
+
+<script type="text/plain" id="cpp-fuente">
+/*
+ * C. Interesting drink
+ * Contest: Contest II - 2027-1 (https://codeforces.com/group/P35WkNZDR8/contest/713751)
+ * Problema: C. Interesting drink (https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/C)
+ * Idea principal: ordenar los precios de las tiendas y, por cada día, buscar con binaria la última tienda con precio <= monedas; su posición es la cantidad de tiendas donde puede comprar.
+ * Complejidad: O(n log n + q log n).
+ *              Memoria: O(n).
+ * Técnicas: ordenamiento, binary search.
+ */
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+using vll = vector<ll>;
+
+#define all(x) (x).begin(), (x).end()
+#define pb push_back
+#define endl '\n'
+
+/*C. Interesting drink
+El problema nos dice que una persona quiere comprar su bebida favorita en una tienda. Hay n tiendas
+y quiere saber en cuántas la puede comprar si cada día tiene m_i monedas, y quiere saberlo durante q días.
+
+Hacer una búsqueda completa y contar los lugares donde pueda comprar es demasiado para n,q=10^5 (sería O(n*q)).
+Por lo que podemos ordenar las tiendas y hacer una búsqueda binaria para poder encontrar la última tienda
+donde pueda comprar.
+*/
+bool puede(ll m,ll x){//Esta es la condición que establecemos en la binaria.
+    if(m<=x)return true;
+    return false;
+}
+void solve() {
+    vll a;
+    ll n;cin>>n;
+    for(int i=0;i<n;i++){
+        ll x;cin>>x;
+        a.pb(x);
+    }
+    //Primero ordenamos las tiendas para poder aplicar la binaria.
+    sort(all(a));
+    ll q;cin>>q;
+    //Hacemos la binaria para cada día.
+    for(int i=0;i<q;i++){
+        ll x;cin>>x;
+        ll l=0,r=n-1,m;
+        //Buscamos el último <=x en las tiendas.
+        //La función es de la forma V V V V V F F F F F
+        while(l<=r){
+            m=l+(r-l)/2;
+            if(puede(a[m],x))l=m+1;
+            else r=m-1;
+        }
+        //Al terminar, l es la posición del primer precio mayor a x, o sea, la cantidad de tiendas con precio <= x.
+        cout<<l<<endl;
+    }
+}
+
+/*Programa principal
+El problema tiene un solo caso de prueba, por lo que llamamos solve() una sola vez.
+*/
+int main(){
+    cin.tie(0)->sync_with_stdio(0);
+    solve();
+}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="../../assets/viewer.js"></script>
+</body>
+</html>
