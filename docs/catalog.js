@@ -26,5 +26,18 @@ const CATALOG = [
     archivo: "soluciones/contest_ii_2027_1/B_pashmak_and_flowers.html",
     cpp: "soluciones/contest_ii_2027_1/B_pashmak_and_flowers.cpp",
     tags: ["conteo", "combinatoria", "máximo y mínimo", "matemáticas"]
+  },
+    {
+    tipo: "solucion",
+    contest: "Contest II - 2027-1",
+    contestSlug: "contest_ii_2027_1",
+    contestUrl: "https://codeforces.com/group/P35WkNZDR8/contest/713751",
+    problema: "C",
+    tituloProblema: "Interesting drink",
+    problemaUrl: "https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/C",
+    descripcion: "En cuántas tiendas se puede comprar una bebida con m_i monedas cada día: ordenar los precios y usar búsqueda binaria para encontrar la última tienda con precio <= m_i.",
+    archivo: "soluciones/contest_ii_2027_1/C_interesting_drink.html",
+    cpp: "soluciones/contest_ii_2027_1/C_interesting_drink.cpp",
+    tags: ["binary search", "búsqueda binaria", "ordenamiento", "sorting"]
   }
 ];
