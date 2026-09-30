@@ -52,5 +52,18 @@ const CATALOG = [
     archivo: "soluciones/contest_ii_2027_1/D_badge.html",
     cpp: "soluciones/contest_ii_2027_1/D_badge.cpp",
     tags: ["simulación", "grafos", "ciclos", "visitados"]
+  },
+    {
+    tipo: "solucion",
+    contest: "Contest II - 2027-1",
+    contestSlug: "contest_ii_2027_1",
+    contestUrl: "https://codeforces.com/group/P35WkNZDR8/contest/713751",
+    problema: "E",
+    tituloProblema: "Magic Powder - 2",
+    problemaUrl: "https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/E",
+    descripcion: "Máxima cantidad de galletas que se pueden hornear con los ingredientes disponibles y k gramos de polvo mágico: binaria sobre la respuesta, sumando lo que falta de cada ingrediente.",
+    archivo: "soluciones/contest_ii_2027_1/E_magic_powder_2.html",
+    cpp: "soluciones/contest_ii_2027_1/E_magic_powder_2.cpp",
+    tags: ["binary search", "búsqueda binaria", "binaria sobre la respuesta", "maximizar", "greedy"]
   }
 ];
