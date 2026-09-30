@@ -39,5 +39,18 @@ const CATALOG = [
     archivo: "soluciones/contest_ii_2027_1/C_interesting_drink.html",
     cpp: "soluciones/contest_ii_2027_1/C_interesting_drink.cpp",
     tags: ["binary search", "búsqueda binaria", "ordenamiento", "sorting"]
+  },
+    ,{
+    tipo: "solucion",
+    contest: "Contest II - 2027-1",
+    contestSlug: "contest_ii_2027_1",
+    contestUrl: "https://codeforces.com/group/P35WkNZDR8/contest/713751",
+    problema: "D",
+    tituloProblema: "Badge",
+    problemaUrl: "https://codeforces.com/group/P35WkNZDR8/contest/713751/problem/D",
+    descripcion: "Para cada estudiante como punto de partida, encontrar el primero que se repite al seguir la cadena de culpas: simulación con un arreglo de visitados por cada inicio.",
+    archivo: "soluciones/contest_ii_2027_1/D_badge.html",
+    cpp: "soluciones/contest_ii_2027_1/D_badge.cpp",
+    tags: ["simulación", "grafos", "ciclos", "visitados"]
   }
 ];
